@@ -10,4 +10,3 @@ from sensors.temperature import SensorTemperature
 x = sensorTemperature("Stefan",25);
 x.sayHello();
 x.sayValue()
-

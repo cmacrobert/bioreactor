@@ -11,6 +11,7 @@ class SensorTemperature(SensorBase):
     
     #Functions
     def __init__(self, label, value):
+        SensorBase.__init__(self);
         self.label = label
         self.value = value
     
