@@ -20,3 +20,6 @@ class SensorBase():
     def say_hello(self):
         print("Hello, I am " + self.label);
         
+    def sayValue(self):
+        print(self.value)
+        

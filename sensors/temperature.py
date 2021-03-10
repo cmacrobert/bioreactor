@@ -10,6 +10,10 @@ from sensors.base import SensorBase
 class SensorTemperature(SensorBase):
     
     #Functions
-    def __init__(self, label):
-        SensorBase.__init__(self);
+    def __init__(self, label, value):
         self.label = label
+        self.value = value
+    
+
+        
+
