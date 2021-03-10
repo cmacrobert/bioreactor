@@ -5,8 +5,7 @@ Created on Tue Feb  9 16:19:29 2021
 @author: Calum
 """
 
-#from sensors.sensor_base import sensorBase
-from sensors.temperature import sensorTemperature
+from sensors.temperature import SensorTemperature
 
-x = sensorTemperature("a thing");
-x.sayHello();
+test_sensor = SensorTemperature("a thing");
+test_sensor.say_hello();

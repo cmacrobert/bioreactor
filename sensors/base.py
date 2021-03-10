@@ -4,22 +4,19 @@ Created on Sat Feb 20 12:15:19 2021
 
 @author: Calum
 """
-#Base definition for a sensor
-class sensorBase():
 
-    #Functions
+class SensorBase():
+
     def __init__(self):    
-        self.label = "unnamed sensor"  #name label of sensor
-        self.sensorValue = float(0)    #value of sensor
+        self.label = "unnamed sensor"
+        self.sensor_value = float(0)
     
-    #getSensorValue: returns sensorValue
-    def getSensorValue(self):
-        return self.sensorValue;
+    def get_sensor_value(self):
+        return self.sensor_value;
     
-    #setSensorValue: sets sensorValue
-    def setSensorValue(self, newValue):
-        self.sensorValue = newValue;
+    def set_sensor_value(self, new_value):
+        self.sensor_value = new_value;
         
-    def sayHello(self):
+    def say_hello(self):
         print("Hello, I am " + self.label);
         
