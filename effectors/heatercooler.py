@@ -12,7 +12,7 @@ class heatercooler(EffectorBase):
         self.label = 'heatercooler'
 
     def get_temp(self):
-        (self.thermocouple.getemperature())
+        (self.thermocouple.get_temperature())
         return super().get_temp()
         print (self.get_temp())
 
