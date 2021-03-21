@@ -7,7 +7,7 @@ Created on Tue Feb  9 16:19:29 2021
 
 from sensors.temperature import SensorTemperature
 
-x = sensorTemperature("Stefan",25);
+x = SensorTemperature("Stefan",25);
 x.sayHello();
 x.sayValue()
 
