@@ -2,92 +2,41 @@
 from effectors.base import EffectorBase
 #imported the thermocouple information 
 from sensors.thermocouple import thermocouple
+from pid.natpid import stefanpid #from folder.file import class
+from sensors.peltiermodule import peltiermodule
+from reactor import reactor
 
-
-
-class heatercooler(EffectorBase):
-    def __init__(self):
-    #def __init__(self, mainprogram):
-        super().__init__()
-        self.label = 'heatercooler'
-
+class heatercooler(EffectorBase, stefanpid): #inherited from these classes
+    def __init__(self, reactor): 
+    #def __init__(self, thermocouple, peltiermodule, reactor): # need be attaching thermo to heater DO NOT DO THIS
+    #def __init__(self, mainprogram): # do not do this, it will attach the wrong way around
+    #also attached the peltier module (the value it uses)    
+        EffectorBase.__init__(self)   # run it's init fuction
+        stefanpid.__init__(self)      # uses it's init, but does not attach
+        self.thermocouple = thermocouple(reactor) #fully attach step
+        #self.peltiermodule = peltiermodule(reactor) #FIX THIS! # the expects to be attached to the peltier module now
+        self.reactor = reactor    #^passed the reactor through to the modules. only want thermo and peltier to exisst if have heatercooler. 
+        
     def get_temp(self):
-        (self.thermocouple.get_temperature())
-        return super().get_temp()
-        print (self.get_temp())
+        self.thermocouple.get_temperature() #asking already attached thermocouple to get the temperature
+        # print (self.get_temp())
+        return super().get_temp()           #tells to call if from the parent effector class
+     
 
-   # def getpidtemp(self, temp): 
-   #     get_temperature() = temp
-   #     PID(MV_bar=0) = temp
-   #     print('changing MV_bar to temperature sensed by thermocouple which is: ' + temp) 
+    # need to overirde MV_bar in the  def time_step_forward(self): function
+    def time_step_forward(self):        #named the same as in the pid!
+    # needs to be set for every loop, because it might be different. 
+        #before running, need to pass MV_bar to the heater
+        self.MV_bar = self.get_temp()
+        #call function time step forward in the super class
+        super().time_step_forward() 
         
-import time 
-import matplotlib.pyplot as plt 
-import random 
  
-xMax = 200 
-x=[] 
-y=[] 
-print('Reactor Started') 
-T = 0 
-MV_bar = heatercooler.get_temp(self) 
-val = MV_bar 
-e_prev = 0 
-e = 0 
-t_prev = 0 
-t = 1 
-I = 0 
-Kp = 0.05 
-Ki = 0.05 
-Kd = 0.05 
-SP = 37 
-counter = 0 
-     
-while True: 
-    # PID calculations 
-    e = SP - val 
-     
-    if abs(e) < 1: 
-        val = MV_bar = random.choice([10,20,40,50]) 
-        P = I = D = 0 
-     
-    x.append(t) 
-    y.append(val) 
-         
-    plt.cla() 
-    plt.plot(x,y) 
-    plt.show() 
-    #print(val) 
-         
-    P = Kp*e 
-    I = I + Ki*e*(t - t_prev) 
-    D = Kd*(e - e_prev)/(t - t_prev) 
-         
-    val = MV_bar + P + I + D 
-          
-    # update stored data for next iteration 
-    e_prev = e 
-    t_prev = t     
-    t = t+1 
-         
-    time.sleep(0.25) 
-    counter += 1 
-    print(counter) 
-         
-    #if t==xMax: 
-        # plt.plot(x,y) 
-        # exit()
-
-
-
-
-
-
 
         
-#test code for using fucntions defined in the parent class
+#test code for using functions defined in the parent class
 if __name__ == '__main__':
-    heatercooler = heatercooler()
-    print(thermocouple.get_temperature())
+    heatercooler = heatercooler(reactor()) #passers reactor to the heatercooler, modules can now interact
+    print(heatercooler.thermocouple.get_temperature()) #refers to  self.thermocouple = thermocouple(reactor)
  
     

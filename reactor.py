@@ -6,8 +6,8 @@ Created on Wed Mar 10 17:53:02 2021
 """
 class reactor():
      
-    def __init__ (self, name, temperature=10): 
-        self.name = name 
+    def __init__ (self, temperature=10): #name was delected, not reffered to
+        #self.name = name #argument name is passed thorugh init statement)
         self.temperature = temperature 
         self.initialtemperature = temperature 
          

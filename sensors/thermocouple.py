@@ -13,8 +13,9 @@ class thermocouple(SensorBase):
         
 #test code for using fucntions defined in the parent class
 if __name__ == '__main__':
-    thermocouple = thermocouple()
-    print(thermocouple.get_sensor_value())
+    thermocouple = thermocouple()           #sets global variable thermocouple sets equal to an instance of the class thermocouple 
+                                            #brackets implicitly pass self, (only when used on a class)
+    print(thermocouple.get_sensor_value()) 
     thermocouple.set_sensor_value(1000)
     print(thermocouple.get_sensor_value())
     

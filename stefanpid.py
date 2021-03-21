@@ -8,7 +8,8 @@ Created on Tue Mar  9 10:37:10 2021
 import time 
 import matplotlib.pyplot as plt 
 import random 
- 
+
+
 xMax = 200 
 x=[] 
 y=[] 
