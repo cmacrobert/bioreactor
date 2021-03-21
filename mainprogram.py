@@ -29,5 +29,5 @@ if __name__ == '__main__':
             running = False 
         else: 
             pass 
-        
+        #stops program while waiting for input! -put in while loop
         

@@ -59,8 +59,8 @@ while True:
     counter += 1 
     print(counter) 
          
-    #if t==xMax: 
-        # plt.plot(x,y) 
-        # exit()
+    if t==xMax: 
+         plt.plot(x,y) 
+         exit()
          
     
