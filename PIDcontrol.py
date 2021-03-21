@@ -19,6 +19,11 @@ def PID(Kp, Ki, Kd, SP, MV_bar=0):
     t_prev = 0
     t = 1
     I = 0
+    x=np.ones(xMax)
+    y=np.ones(xMax)
+    
+    prev_time = time.time()
+    curr_time = 0
     
     while True:
         # PID calculations
@@ -34,17 +39,20 @@ def PID(Kp, Ki, Kd, SP, MV_bar=0):
         e_prev = e
         t_prev = t
         
-        x[t] = t
-        y[t] = val
+        #x[t] = t
+        #y[t] = val
         
         t = t+1
+                
+        curr_time = time.time()
+        if curr_time >= prev_time+2:
+            print("PID thread - " + str(val))
+            prev_time = curr_time
         
-        print(val)
+        #if t==xMax:
+        #    plt.plot(x,y)
+        #    exit()
         
-        if t==xMax:
-            plt.plot(x,y)
-            exit()
-        
-x=np.ones(xMax)
-y=np.ones(xMax)
-PID(0.05,0.05,0.05,37)
+#x=np.ones(xMax)
+#y=np.ones(xMax)
+#PID(0.05,0.05,0.05,37)
