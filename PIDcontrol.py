@@ -7,12 +7,16 @@ Created on Tue Mar  9 10:37:10 2021
 
 import time
 import matplotlib.pyplot as plt
-import numpy as np
 
 xMax = 200
+x=[]
+y=[]
+setPoint = 10
+print('Reactor Started')
+T = 0
 
-def PID(Kp, Ki, Kd, SP, MV_bar=0):
-    # initialize stored data
+def PID(Kp, Ki, Kd, SP, MV_bar):
+
     val = MV_bar
     e_prev = 0
     e = 0
@@ -39,9 +43,6 @@ def PID(Kp, Ki, Kd, SP, MV_bar=0):
         e_prev = e
         t_prev = t
         
-        #x[t] = t
-        #y[t] = val
-        
         t = t+1
                 
         curr_time = time.time()
@@ -49,10 +50,26 @@ def PID(Kp, Ki, Kd, SP, MV_bar=0):
             print("PID thread - " + str(val))
             prev_time = curr_time
         
-        #if t==xMax:
-        #    plt.plot(x,y)
-        #    exit()
+        x.append(t)
+        y.append(val)
         
-#x=np.ones(xMax)
-#y=np.ones(xMax)
-#PID(0.05,0.05,0.05,37)
+        plt.plot(x,y)
+        plt.show()
+        plt.clf()
+        #print(val)
+        
+        time.sleep(0.25)
+        """
+        command = input('>')
+        if command == "set T SP":
+            setPoint = input('set Temperature SetPoint >')
+        else:
+            pass
+        
+        #if t==xMax:
+           # plt.plot(x,y)
+           # exit()
+        """         
+PID(0.05,0.05,0.05,setPoint,T)
+        
+    

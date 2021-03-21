@@ -10,6 +10,9 @@ from threadtest import ThreadTest
 import time
 
 new_threadtest = ThreadTest("5 second test", 5);
+x = SensorTemperature("Stefan",25);
+x.sayHello();
+x.sayValue()
 
 def main():   
     print("Starting main()")
