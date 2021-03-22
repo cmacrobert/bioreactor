@@ -12,44 +12,17 @@ class reactor():
         self.initialtemperature = temperature 
          
     def say(self): 
-        print("Temperature of The Reactor is " + str(self.temperature) + " degrees..." ) 
+        print("Reactor - Temperature is " + str(self.temperature) + " degrees..." ) 
      
-    def gettemperature(self): 
-        print('Getting temperature') 
+    def get_temperature(self): 
+        print('Reactor - Getting temperature') 
         return self.temperature 
  
-    def settemperature(self, value): 
-        print('Setting temperature to ' + value) 
+    def set_temperature(self, value): 
+        print('Reactor - Setting temperature to ' + value) 
         self.temperature = value 
      
-    def resettemperature(self): 
-        print('Resetting temperature') 
+    def reset_temperature(self): 
+        print('Reactor - Resetting temperature') 
         self.temperature = self.initialtemperature 
-        self.say() 
- 
- 
-if __name__ == '__main__': 
-    started = False 
-    while started == False: 
-        if input('>') == 'start reactor': 
-            started = True 
-    reactorone = reactor("reactor") 
-    print('Reactor Started...') 
-     
-     
-     
-    running = True 
-    while running:  
-        command = input('>') 
-        if command == "report": 
-            reactorone.say() 
-        if command == "set temperature":  
-            reactorone.settemperature(input('Set Temperature >')) 
-        if command == "reset temperature": 
-            reactorone.resettemperature() 
-        elif command == "turn off": 
-            print('Shutting Down...') 
-            running = False 
-        else: 
-            pass 
-     
+        self.say()

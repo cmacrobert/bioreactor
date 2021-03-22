@@ -1,4 +1,5 @@
 from sensors.base import SensorBase
+
 class thermocouple(SensorBase):
 
     def __init__(self, reactor):
