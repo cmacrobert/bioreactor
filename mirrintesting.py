@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Mar 10 18:57:15 2021
-
+hello
 @author: mirri
 """
 
@@ -22,3 +22,5 @@ if __name__ == '__main__':
     print(temperature.get_sensor_value()) 
     temperature.set_sensor_value(1000) 
     print(temperature.get_sensor_value()) 
+    
+    print("hi")
