@@ -20,7 +20,7 @@ class SensorTemp(SensorBase):
 if __name__ == '__main__': 
     temperature = SensorTemp("temperature",0) 
     print(temperature.get_sensor_value()) 
-    temperature.set_sensor_value(1000) 
+    temperature.set_sensor_value(37) 
     print(temperature.get_sensor_value()) 
     
     print("hi")
