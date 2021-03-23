@@ -24,3 +24,6 @@ class SensorBase(): #establishes class called SensorBase
     def say_hello(self):                    # defines a new function
         print("Hello, I am " + self.label); # never used, but can print its name in the console
         
+    def sayValue(self):
+        print(self.value)
+        

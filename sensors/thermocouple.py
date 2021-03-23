@@ -21,3 +21,4 @@ if __name__ == '__main__':
     #thermocouple.set_sensor_value(1000)     #example. sets value to 1000
     #print(thermocouple.get_sensor_value())  
     
+
