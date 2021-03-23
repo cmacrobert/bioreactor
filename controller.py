@@ -5,8 +5,6 @@ Created on Sun Feb 28 19:13:33 2021
 @author: User
 """
 
-import keyboard
-
 from reactor1 import reactor
 
 class controller():

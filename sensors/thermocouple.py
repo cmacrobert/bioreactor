@@ -16,6 +16,4 @@ class thermocouple(SensorBase):
 if __name__ == '__main__':
     thermocouple = thermocouple()
     print(thermocouple.get_sensor_value())
-    thermocouple.set_sensor_value(1000)
-    print(thermocouple.get_sensor_value())
-    
+
