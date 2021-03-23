@@ -31,12 +31,12 @@ class Main():
     def handle_command(self, command):
         if command == IR.NONE:
             print("Main - Error with command handling, received IR.NONE")
-            #TODO: throw error. We should't be able to get here with a value of IR.NONE
+            #TODO: throw error. We should't be able to get here
         elif command == IR.SET_SETPOINT:            
             print("Main - handling command " + str(command))
             new_setpoint = self.input_handler.get_return_value()
             print("new setpoint is " + str(new_setpoint))
-            self.input_handler.reset_value()
+            self.input_handler.reset_return_value()
             self.pid_controller.set_setpoint(new_setpoint)
         elif command == IR.GET_TEMPERATURE:
             print("Main - handling command " + str(command))
@@ -53,11 +53,13 @@ class Main():
     
     def main(self):      
         print("Main - starting input thread")        
-        thread_input = threading.Thread(target=self.start_thread_input, daemon=True)  
+        thread_input = threading.Thread(target=self.start_thread_input,
+                                        daemon=True)  
         thread_input.start()
         
         print("Main - starting PID thread")        
-        thread_pid = threading.Thread(target=self.start_thread_pid, daemon=True)  
+        thread_pid = threading.Thread(target=self.start_thread_pid, 
+                                      daemon=True)  
         thread_pid.start()
         
         while True:
