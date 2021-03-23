@@ -40,7 +40,14 @@ class InputHandler():
                 return_value = float(input('set Temperature SetPoint >'))
                 print("return value is " + str(return_value))
                 self.return_value = return_value
-                self.return_command = IR.SET_SETPOINT
+                self.return_command = IR.PID_SET_SETPOINT
+            elif command == "set T start":
+                return_value = float(input('set Starting Temperature >'))
+                print("return value is " + str(return_value))
+                self.return_value = return_value
+                self.return_command = IR.PID_SET_START
+            elif command == "reset":
+                self.return_command = IR.PID_RESET
             elif command == "report": 
                 self.return_command = IR.GET_TEMPERATURE
             elif command == "set temperature":  
