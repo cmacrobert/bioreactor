@@ -9,8 +9,10 @@ from enum import Enum
 
 class InputReturns(Enum):
     NONE = 1
-    SET_SETPOINT = 2
-    GET_TEMPERATURE = 3
-    SET_TEMPERATURE = 4
-    RESET_TEMPERATURE = 5
-    SHUT_DOWN = 6
+    PID_SET_SETPOINT = 2
+    PID_SET_START = 3
+    PID_RESET = 4
+    GET_TEMPERATURE = 5
+    SET_TEMPERATURE = 6
+    RESET_TEMPERATURE = 7
+    SHUT_DOWN = 8
