@@ -18,15 +18,15 @@ class PIDControl():
         self.start_temperature = 0
 
     def set_setpoint(self, new_setpoint):
-        print("PIDControl - changing setpoint to " + str(new_setpoint))
+        print("PIDControl - Changing setpoint to " + str(new_setpoint))
         self.setpoint = new_setpoint
         
     def set_start_temperature(self, new_start_temperature):
-        print("PIDControl - changing setpoint to " + str(new_start_temperature))
+        print("PIDControl - Changing setpoint to " + str(new_start_temperature))
         self.start_temperature = new_start_temperature
 
     def reset(self):    
-        print("Restarting PID")    
+        print("PIDControl - Restarting")    
         self.reset_scheduled = True
 
     def draw_plot(self, x, y):
@@ -39,7 +39,7 @@ class PIDControl():
 
     def start_thread(self):
         
-        print("Starting PID")
+        print("PIDControl - Starting")
         x=[]
         y=[]
         myplot = plt.plot(x,y)
@@ -53,7 +53,6 @@ class PIDControl():
                 x=[]
                 y=[]
                 plt.clf()
-                print('Reactor Started')
                 T = 0
                 val = self.start_temperature
                 e_prev = 0

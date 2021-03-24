@@ -58,7 +58,7 @@ class InputHandler():
             elif command == "turn off" or command == "shut down":
                 self.return_command = IR.SHUT_DOWN                              
             else:
-                print("Command not recognised: " + command)
+                print("Input handler - Command not recognised: " + command)
                 pass
         print("Input handler - Exited loop")
             

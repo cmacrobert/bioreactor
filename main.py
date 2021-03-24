@@ -66,7 +66,7 @@ class Main():
         """
         Main loop starts threads for input handler and PID
             then continually polls for input commands to handle
-            Curren
+            Currently waiting 1 second between polling, to aid debugging
         """
         thread_input = threading.Thread(target=self.start_thread_input,
                                         daemon=True)  
