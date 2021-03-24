@@ -19,31 +19,32 @@ class InputHandler():
         return self.return_command
     
     def reset_command(self):
-        print("Input handler - Resetting command")
         self.return_command = IR.NONE
         
     def get_return_value(self):
         return self.return_value
     
     def reset_return_value(self):
-        print("Input handler - Resetting value")
         self.return_value = 0
     
     def start_thread(self):
+        """
+        Main loop for input handler
+        Continually awaits input from user via console
+        Sets return command on receiving recognised command
+        """
         print("Input handler - Starting thread")
         
         self.running = True
         while self.running == True:
             command = input('>')
-            print("Command recieved: " + command)
+            print("Input handler - Command recieved: " + command)
             if command == "set T SP":
-                return_value = float(input('set Temperature SetPoint >'))
-                print("return value is " + str(return_value))
+                return_value = float(input('Set Temperature SetPoint >'))
                 self.return_value = return_value
                 self.return_command = IR.PID_SET_SETPOINT
             elif command == "set T start":
-                return_value = float(input('set Starting Temperature >'))
-                print("return value is " + str(return_value))
+                return_value = float(input('Set Starting Temperature >'))
                 self.return_value = return_value
                 self.return_command = IR.PID_SET_START
             elif command == "reset":
@@ -57,6 +58,7 @@ class InputHandler():
             elif command == "turn off" or command == "shut down":
                 self.return_command = IR.SHUT_DOWN                              
             else:
+                print("Command not recognised: " + command)
                 pass
         print("Input handler - Exited loop")
             

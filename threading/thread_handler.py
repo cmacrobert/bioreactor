@@ -6,6 +6,9 @@ Created on Mon Mar 22 16:42:50 2021
 """
 
 class ThreadHandler():
+    """
+    TODO: manage threading from here rather than main.py
+    """
     
     def __init__(self, label, sleep_time):
         self.label = label
