@@ -22,7 +22,8 @@ class PIDControl():
         self.setpoint = new_setpoint
         
     def set_start_temperature(self, new_start_temperature):
-        print("PIDControl - Changing setpoint to " + str(new_start_temperature))
+        print("PIDControl - Changing setpoint to " 
+              + str(new_start_temperature))
         self.start_temperature = new_start_temperature
 
     def reset(self):    
@@ -30,6 +31,8 @@ class PIDControl():
         self.reset_scheduled = True
 
     def draw_plot(self, x, y):
+        #TODO: do plotting in separate file/thread with own timing?
+            #currently the draw call is massively affecting the PID speed
         plt.close()
         plt.plot(x,y)
         plt.hlines(self.setpoint, 0, 5, 'C1', 'dashed')
@@ -38,7 +41,10 @@ class PIDControl():
         plt.show()   
 
     def start_thread(self):
-        
+        """
+        Main loop for PID controller
+        Continually updates PID, calling plot function each iteration
+        """
         print("PIDControl - Starting")
         x=[]
         y=[]
@@ -68,24 +74,20 @@ class PIDControl():
                 self.reset_scheduled = False
             
             # PID calculations
-            e = self.setpoint - val
-                        
-            x.append(t*time_rate)
-            y.append(val)
-                    
-            self.draw_plot(x, y)
-            
+            e = self.setpoint - val            
             P = (Kp*e)*rate
             I = (I + Ki*e*(t - t_prev))*rate
-            D = (Kd*(e - e_prev)/(t - t_prev))*rate
-                
+            D = (Kd*(e - e_prev)/(t - t_prev))*rate                
             val = val + P + I + D
                  
-            # update stored data for next iteration
+            """ Update stored data for next iteration"""
             e_prev = e
             t_prev = t 
-            t = (t+1)
-                
+            t = (t+1)                
+                        
+            x.append(t*time_rate)
+            y.append(val)                    
+            self.draw_plot(x, y)
             time.sleep(time_rate)
         print("PID controller - Exited loop")
     
