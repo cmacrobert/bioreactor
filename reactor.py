@@ -12,7 +12,7 @@ import time
 
 class reactor():
      
-    def __init__ (self, temperature=15): #name was delected, not reffered to
+    def __init__ (self, temperature=15): 
         #self.name = name #argument name is passed thorugh init statement)
         self.temperature = temperature 
         self.initialtemperature = temperature 
@@ -48,7 +48,7 @@ class reactor():
             )  # generic for inner nodes
             # dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
-            plt.figure(1)  # for each cycle i want node T9 to become the reactor temperature
+            plt.figure(1) 
             plt.plot(x, T)
             plt.axis([0, L, 10, 35])
             plt.xlabel("Distance (m)")
@@ -63,7 +63,7 @@ class reactor():
 L = 0.21  # radius of sphere in m
 n = 10  # number of divisions
 T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
-T1s = 27  # peltier temperature #needs to be setpoint{}{}{}{}{}
+T1s = 27  # peltier temperature needs to be integrated as this value
 T2s = 15  # external temperature
 dx = L / n
 alpha = 0.00143
