@@ -16,4 +16,5 @@ class peltiermodule(): #inherited from 0 classes
     def time_step_forward():    #needs to apply to every step, each cycle
         pass                    #its not finished!
     
-    
+    #needs to convert the PID temp target to 
+    #a useable voltage within the module

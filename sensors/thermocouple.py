@@ -12,8 +12,8 @@ class thermocouple(SensorBase):     #establishes class thermocouple which inheri
         self.set_sensor_value(self.reactor.gettemperature()) #gets temperature from the reactor sets it as a value
         return super().get_sensor_value()   #returns the value gotten using get_sensor_value
                                             #allows that to be a value that future modules can get
-        
-#test code for using fucntions defined in the parent class, not used by othe programs
+    
+#test code for using fucntions defined in the parent class, not used by other programs
 if __name__ == '__main__':
     thermocouple = thermocouple()           #sets global variable thermocouple sets equal to an instance of the class thermocouple 
                                             #brackets implicitly pass self, (only when used on a class)
