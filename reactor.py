@@ -46,12 +46,12 @@ class reactor():
             dTdt[0] = alpha * (
                 -(T[0] - T1s) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
             )  # generic for inner nodes
-            # dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
+            dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
             plt.figure(1) 
             plt.plot(x, T)
             plt.axis([0, L, 10, 35])
-            plt.xlabel("Distance (m)")
+            plt.xlabel("Distance from heat source(m)")
             plt.ylabel("Temperature (C)")
             plt.show()
             plt.pause(0.05)
@@ -71,7 +71,6 @@ t_final = 1  # time interval lasts one second
 dt = 0.1  # this is the time step
 x = np.linspace(dx / 2, L - dx / 2, n)
 T = np.ones(n) * T0  # start temperature vector
-# but i want each to be taken from the last iteration
 dTdt = np.empty(n)  # define empty vector
 
 #warning, this runs forever while reactor is started/running
@@ -80,6 +79,6 @@ running = True #so we can end the while loop at some point
 
 while running: 
     T = reactor.reactor_heating_cycle(T) #function belongs to the reactor
-    reactor.set_temperature = T[9]
-    if __name__ == "__main__": #the if statement will not work in a thread
-        time.sleep(0.2)         #in that case the overall program decides when sleeping happens
+    reactor.set_temperature = T[6]
+    if __name__ == "__main__": #the if statement will not work while running in a thread
+        time.sleep(0.5)         #in that case the overall program decides when sleeping happens
