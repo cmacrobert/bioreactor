@@ -12,22 +12,25 @@ import random
 class PIDControl():    
 
     def __init__ (self):
-        print("PIDControl - Initialising")
+        print("PIDControl: Initialising")
         self.setpoint = 37
         self.running = False
         self.start_temperature = 0
 
     def set_setpoint(self, new_setpoint):
-        print("PIDControl - Changing setpoint to " + str(new_setpoint))
+        print("PIDControl: Changing setpoint to " + str(new_setpoint))
         self.setpoint = new_setpoint
         
     def set_start_temperature(self, new_start_temperature):
-        print("PIDControl - Changing setpoint to " 
+        print("PIDControl: Changing setpoint to " 
               + str(new_start_temperature))
         self.start_temperature = new_start_temperature
+        
+    def get_running(self):
+        return self.running
 
     def reset(self):    
-        print("PIDControl - Restarting")    
+        print("PIDControl: Restarting")    
         self.reset_scheduled = True
 
     def draw_plot(self, x, y):
@@ -40,12 +43,12 @@ class PIDControl():
         plt.ylim(0,55)
         plt.show()   
 
-    def start_thread(self):
+    def start(self):
         """
         Main loop for PID controller
         Continually updates PID, calling plot function each iteration
         """
-        print("PIDControl - Starting")
+        print("PIDControl: Starting")
         x=[]
         y=[]
         myplot = plt.plot(x,y)
@@ -55,7 +58,7 @@ class PIDControl():
         
         while self.running == True:
             if self.reset_scheduled == True:
-                print("PID controller - resetting")
+                print("PID controller: resetting")
                 x=[]
                 y=[]
                 plt.clf()
@@ -89,8 +92,8 @@ class PIDControl():
             y.append(val)                    
             self.draw_plot(x, y)
             time.sleep(time_rate)
-        print("PID controller - Exited loop")
+        print("PID controller: Exited loop")
     
-    def stop_thread(self):
-        print("PID controller - Stopping thread")
+    def stop(self):
+        print("PID controller: Stopping thread")
         self.running = False
