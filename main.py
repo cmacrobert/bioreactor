@@ -4,7 +4,7 @@ Created on Mon Mar 22 15:59:25 2021
 
 @author: Calum
 """
-import threading
+import thread_handler
 import time
 from inputs.input_returns import InputReturns as IR
 import inputs.input_handler as IH
@@ -14,23 +14,21 @@ import sys
 class Main():
     
     def __init__(self):
+        self.thread_handler = thread_handler.ThreadHandler()
         self.input_handler = IH.InputHandler()
         self.pid_controller = pid_control.PIDControl()
-    
-    def start_thread_input(self):
-        self.input_handler.start_thread()
+        self.running = False
+        self.shutting_down = False
         
-    def start_thread_pid(self):
-        self.pid_controller.start_thread()
-    
     def shut_down(self):
         """
         Stop all running threads before stopping main thread
-        TODO: move to thread_handler
+        TODO: rename stop() functions? Only ending main loop, not thread
         """
-        self.input_handler.stop_thread()
-        self.pid_controller.stop_thread()
-        sys.exit()  #TODO: confirm other threads are closed first
+        self.input_handler.stop()
+        self.pid_controller.stop()
+        self.thread_handler.stop_threads()
+        self.running = False
         
     def handle_command(self, command):
         """
@@ -38,7 +36,7 @@ class Main():
         """
         if command == IR.NONE:
             """ TODO: throw error. We should't be able to get here"""
-            print("Main - Error with command handling, received IR.NONE")
+            print("Main: Error with command handling, received IR.NONE")
         elif command == IR.PID_SET_SETPOINT:
             new_setpoint = self.input_handler.get_return_value()
             self.input_handler.reset_return_value()
@@ -47,18 +45,18 @@ class Main():
             new_start = self.input_handler.get_return_value()
             self.input_handler.reset_return_value()
             self.pid_controller.set_start_temperature(new_start)
-            print("Start value applied, will take effect on reset")
+            print("Main: Start value applied, will take effect on reset")
         elif command == IR.PID_RESET:
             self.pid_controller.reset()
         elif command == IR.GET_TEMPERATURE:
             """ TODO: return call to get thermocouple temperature"""
-            print("Main - command " + str(command) + "not implemented")
+            print("Main: command " + str(command) + "not implemented")
         elif command == IR.SET_TEMPERATURE:
             """ TODO: return call to set reactor temperature"""
-            print("Main - command " + str(command) + "not implemented")
+            print("Main: command " + str(command) + "not implemented")
         elif command == IR.RESET_TEMPERATURE:
             """ TODO: return call to reset reactor temperature"""
-            print("Main - command " + str(command) + "not implemented")
+            print("Main: command " + str(command) + "not implemented")
         elif command == IR.SHUT_DOWN:
             self.shut_down()
     
@@ -68,15 +66,13 @@ class Main():
             then continually polls for input commands to handle
             Currently waiting 1 second between polling, to aid debugging
         """
-        thread_input = threading.Thread(target=self.start_thread_input,
-                                        daemon=True)  
-        thread_input.start()
-            
-        thread_pid = threading.Thread(target=self.start_thread_pid, 
-                                      daemon=True)  
-        thread_pid.start()
+        self.thread_handler.start_thread("input",
+                                         self.input_handler.start)            
+        self.thread_handler.start_thread("pid",
+                                         self.pid_controller.start)
         
-        while True:
+        self.running = True
+        while (self.running == True):
             time.sleep(1)   # Delay when polling, mainly for debugging
             
             """ Check if we've recieved any input commands"""
@@ -85,6 +81,14 @@ class Main():
                 """ Reset command, so we only handle it once"""
                 self.input_handler.reset_command()                
                 self.handle_command(command)
+        
+        self.shutting_down = True
+        while (self.shutting_down == True):
+            """ Check all other threaded processes have stopped"""
+            if (self.input_handler.get_running() == False and 
+                self.pid_controller.get_running() == False):
+                self.shutting_down = False
+        print("Main: Shutdown complete")
 
 main = Main()
 main.main()

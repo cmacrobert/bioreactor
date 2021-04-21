@@ -25,6 +25,9 @@ class PIDControl():
         print("PIDControl - Changing setpoint to " 
               + str(new_start_temperature))
         self.start_temperature = new_start_temperature
+        
+    def get_running(self):
+        return self.running
 
     def reset(self):    
         print("PIDControl - Restarting")    
@@ -40,7 +43,7 @@ class PIDControl():
         plt.ylim(0,55)
         plt.show()   
 
-    def start_thread(self):
+    def start(self):
         """
         Main loop for PID controller
         Continually updates PID, calling plot function each iteration
@@ -91,6 +94,6 @@ class PIDControl():
             time.sleep(time_rate)
         print("PID controller - Exited loop")
     
-    def stop_thread(self):
+    def stop(self):
         print("PID controller - Stopping thread")
         self.running = False

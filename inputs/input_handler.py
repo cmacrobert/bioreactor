@@ -10,7 +10,7 @@ from inputs.input_returns import InputReturns as IR
 class InputHandler():
 
     def __init__ (self):
-        print("Input handler - Initialising")
+        print("InputHandler: Initialising")
         self.reset_command()
         self.reset_return_value()
         self.running = False
@@ -26,19 +26,22 @@ class InputHandler():
     
     def reset_return_value(self):
         self.return_value = 0
+        
+    def get_running(self):
+        return self.running
     
-    def start_thread(self):
+    def start(self):
         """
         Main loop for input handler
         Continually awaits input from user via console
         Sets return command on receiving recognised command
         """
-        print("Input handler - Starting thread")
+        print("InputHandler: Starting thread")
         
         self.running = True
-        while self.running == True:
+        while self.running == True:            
             command = input('>')
-            print("Input handler - Command recieved: " + command)
+            print("InputHandler: Command recieved: " + command)
             if command == "set T SP":
                 return_value = float(input('Set Temperature SetPoint >'))
                 self.return_value = return_value
@@ -56,12 +59,15 @@ class InputHandler():
             elif command == "reset temperature": 
                 self.return_command = IR.RESET_TEMPERATURE
             elif command == "turn off" or command == "shut down":
-                self.return_command = IR.SHUT_DOWN                              
+                self.return_command = IR.SHUT_DOWN
+                #TODO: prevent further input() in a better way
+                #setting self.running=False works but it's a bit hacky
+                self.running = False                    
             else:
-                print("Input handler - Command not recognised: " + command)
+                print("InputHandler: Command not recognised: " + command)
                 pass
-        print("Input handler - Exited loop")
+        print("InputHandler: Exited loop")
             
-    def stop_thread(self):
-        print("Input handler - Stopping thread")
+    def stop(self):
+        print("InputHandler: Stopping thread")
         self.running = False
