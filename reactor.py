@@ -64,7 +64,7 @@ L = 0.21  # radius of sphere in m
 n = 10  # number of divisions
 T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
 T1s = 27  # peltier temperature needs to be integrated as this value
-T2s = 15  # external temperature
+T2s = 20 # external temperature
 dx = L / n
 alpha = 0.00143
 t_final = 1  # time interval lasts one second
@@ -79,6 +79,6 @@ running = True #so we can end the while loop at some point
 
 while running: 
     T = reactor.reactor_heating_cycle(T) #function belongs to the reactor
-    reactor.set_temperature = T[6]
+    reactor.set_temperature = T[7]
     if __name__ == "__main__": #the if statement will not work while running in a thread
         time.sleep(0.5)         #in that case the overall program decides when sleeping happens
