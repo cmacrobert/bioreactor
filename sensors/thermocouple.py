@@ -9,9 +9,11 @@ class thermocouple(SensorBase):     #establishes class thermocouple which inheri
         self.reactor = reactor      #attaches to reactor
         
     def get_temperature(self):      #defines function, inherits from self(itself, the thermocouple?)
-        self.set_sensor_value(self.reactor.gettemperature()) #gets temperature from the reactor sets it as a value
-        return super().get_sensor_value()   #returns the value gotten using get_sensor_value
-                                            #allows that to be a value that future modules can get
+        if reactor= running
+            self.set_sensor_value(self.reactor.gettemperature()) #gets temperature from the reactor sets it as a value
+            return super().get_sensor_value()   #returns the value gotten using get_sensor_value
+        else   
+        #get the voltage value form the microcontroller, and convert it back to a temperature!                                 #allows that to be a value that future modules can get
     
 #test code for using fucntions defined in the parent class, not used by other programs
 if __name__ == '__main__':
@@ -22,3 +24,5 @@ if __name__ == '__main__':
     #print(thermocouple.get_sensor_value())  
     
 
+#the thermocouple, a real one, needs to intreact with the microcontoller. 
+#it will have an incoming voltage signal, 
