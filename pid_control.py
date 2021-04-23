@@ -94,3 +94,7 @@ class PIDControl():
     def stop_thread(self):
         print("PID controller - Stopping thread")
         self.running = False
+        
+        
+    def get_target(self, value):
+        self.get_target(value) = 25 #using this value as a placeholder

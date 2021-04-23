@@ -4,6 +4,11 @@ Created on Wed Mar 10 17:53:02 2021
 
 @author: Nat
 """
+#yes, the peltier module does take time to heat up. but this can be simulated
+#approximately bu this program too, its just the temperature difference moving 
+#thought the area in time, and as the peltier module takes a  lot less time
+#to heat up than the water, i consider it neglegible compared to this water 
+#heating simulation. 
 
 from sensors import peltiermodule
 import numpy as np
