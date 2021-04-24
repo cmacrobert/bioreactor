@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 23 00:09:15 2021
+
+@author: Nat
+"""
+
+#this module needs to pass the temperature target to the simulated reactor 
+#in the case that the simulated reactor is running
+#if the simulated reactor is not running, it needs to instead communicate
+#with a real live microcontroller. work on procols for this can be found 
+#in the microcontroller file
+#the peltier module actually is redundant, as in the simulation the PID can 
+#be fed directly into the reacotr as a temperature. 
+
 #from effectors.base import heatercooler DO NOT NEED TO DO THIS need to attach peltier to reactor and heatercooler
 
 class peltiermodule(): #inherited from 0 classes
@@ -18,3 +32,4 @@ class peltiermodule(): #inherited from 0 classes
     
     #needs to convert the PID temp target to 
     #a useable voltage within the module
+
