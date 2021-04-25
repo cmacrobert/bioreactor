@@ -62,6 +62,7 @@ class InputHandler():
                 self.return_command = IR.SHUT_DOWN
                 #TODO: prevent further input() in a better way
                 #setting self.running=False works but it's a bit hacky
+                #Have you tried sys.exit(0)?
                 self.running = False                    
             else:
                 print("InputHandler: Command not recognised: " + command)
