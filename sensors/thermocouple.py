@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 10 17:53:02 2021
+
+@author: Nat
+"""
+
 from sensors.base import SensorBase #imports functions from sensor class
 class thermocouple(SensorBase):     #establishes class thermocouple which inherits from sensor base
 
