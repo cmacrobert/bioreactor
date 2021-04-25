@@ -28,7 +28,7 @@ class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherites fr
         # EffectorBase.__init__(self)                 # DOES NOTHING!
         PIDControl.__init__(self)
         # self.label = "heaterPID"
-        self.reactor = reactor                   # link to reactor
+        self.reactor = reactor                           # link to reactor
         self.thermocouple = thermocouple(self.reactor) #link to thermocouple (link thermocouple to reactor)
                                                 
         
@@ -42,7 +42,7 @@ class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherites fr
     def pass_the_value(self):
     if reactor.running():
     #convert the value to a temperature by timesing it by 0.33 for example
-        self.reactor.set_peltier_temp(self.target_value * 0.33)
+        self.reactor.set_peltier_temp(self.target_value * 0.4)
     #then pass it to the reactor
     
     else:
