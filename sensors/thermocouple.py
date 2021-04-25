@@ -8,9 +8,12 @@ class thermocouple(SensorBase):     #establishes class thermocouple which inheri
                                     #needs to expect to be attached to a reactor    
         self.reactor = reactor      #attaches to reactor
         
-    def get_temperature(self):      #defines function, inherits from self(itself, the thermocouple?)
-        self.set_sensor_value(self.reactor.gettemperature()) #gets temperature from the reactor sets it as a value
-        return super().get_sensor_value()   #returns the value gotten using get_sensor_value
+    def get_value(self):      #defines function, inherits from self(itself, the thermocouple?)
+        if reactor.running:
+            self.set_sensor_value(self.reactor.gettemperature()) #gets temperature from the reactor sets it as a value
+        # else:
+        #     self.set_sensor_value = microcontroller.get_temperature()
+        return get_sensor_value()   #returns the value gotten using get_sensor_value
                                             #allows that to be a value that future modules can get
     
 #test code for using fucntions defined in the parent class, not used by other programs

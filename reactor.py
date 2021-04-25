@@ -16,6 +16,9 @@ class reactor():
         #self.name = name #argument name is passed thorugh init statement)
         self.temperature = temperature 
         self.initialtemperature = temperature 
+        self.petlier_temp = temperature
+        self.running = False
+
          
     def say(self): 
         print("Reactor - Temperature is " + str(self.temperature) + " degrees..." ) 
@@ -27,6 +30,9 @@ class reactor():
     def set_temperature(self, value): 
         print('Reactor - Setting temperature to ' + value) 
         self.temperature = value 
+
+    def set_peltier_temp(self, temp):
+        self.peltier_temp = temp
      
     def reset_temperature(self): 
         print('Reactor - Resetting temperature') 
@@ -44,7 +50,7 @@ class reactor():
                     -(T[i] - T[i - 1]) / dx ** 2 + (T[i + 1] - T[i]) / dx ** 2
                 )  # end nodes have boundary condition, left side
             dTdt[0] = alpha * (
-                -(T[0] - T1s) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
+                -(T[0] - self.petlier_temp) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
             )  # generic for inner nodes
             # dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
@@ -63,7 +69,7 @@ class reactor():
 L = 0.21  # radius of sphere in m
 n = 10  # number of divisions
 T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
-T1s = 27  # peltier temperature needs to be integrated as this value
+# T1s = 27  # peltier temperature needs to be integrated as this value
 T2s = 15  # external temperature
 dx = L / n
 alpha = 0.00143
@@ -76,10 +82,10 @@ dTdt = np.empty(n)  # define empty vector
 
 #warning, this runs forever while reactor is started/running
 reactor = reactor(temperature=T0) #creates an instance of the reactor
-running = True #so we can end the while loop at some point
+self.running = True #so we can end the while loop at some point
 
 while running: 
     T = reactor.reactor_heating_cycle(T) #function belongs to the reactor
-    reactor.set_temperature = T[9]
+    reactor.set_temperature = T[7]
     if __name__ == "__main__": #the if statement will not work in a thread
         time.sleep(0.2)         #in that case the overall program decides when sleeping happens

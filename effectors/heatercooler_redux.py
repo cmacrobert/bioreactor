@@ -15,42 +15,40 @@ Created on Fri Apr 23 00:09:15 2021
 
 #from effectors.base import EffectorBase        #imported the thermocouple information 
 #from sensors.thermocouple import thermocouple  #from folder.file import class
-import pid_control
+from pid_control import PIDControl
 from reactor import reactor
 import microcontroller
+from base import EffectorBase
+from sensors.thermocouple import thermocouple
 
 
-class heatercooler(EffectorBase, pid_control):  #establishes class  #inherites from these classes
-    def __init__(self, reactor):                #????? object is created from the class, initialize the attributes of a class.
-    def __init__(self, microcontroller):
+class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherites from these classes 
+                   #REMOVE EFFECTOR BASE IF YOU DELETE THE CLASS
+    def __init__(self, reactor):    
+            
+        # EffectorBase.__init__(self)                 # DOES NOTHING!
+        PIDControl.__init__(self)
+        # self.label = "heaterPID"
+        self.reactor = reactor                   # link to reactor
+        self.thermocouple = thermocouple(self.reactor) #link to thermocouple (link thermocouple to reactor)
+                                                
         
-    EffectorBase.__init__(self):                 # run it's init fuction
-        pid_control.__init__(self):              # uses it's init, but does not attach anything
-        self.reactor = reactor                   #^passes the reactor through to the modules. 
-                                             
-        
-    def get_temp(self,value):                         #defines a function for the class, get_temp
-        self.pid_control.get_target(value())    #asking already attached pid_control to get the temperature
-        return super().value()                  #tells to call it from the parent class
-   
-        
-    # need to overide value each time in the def time_step_forward(self): function
-    def time_step_forward(self):      
-    # needs to be set for every loop, because it might be different. 
-        self.time_step_forward = self.get_temp()
-        #call function time step forward in the super class
-        super().time_step_forward() 
+    def set_target_temp(self, temp):                  # Get user's target temp
+        self.set_setpoint(temp)
+    
+    def get_current_temp(self,temp):
+        self.get_current_value(self.thermocouple)
         
    
     def pass_the_value(self):
-    if reactor = running:
-    #convert the value to a temperature bytimesing it by 0.33 for example
-         self.time_step_forward = self.get_temp()*0.3
+    if reactor.running():
+    #convert the value to a temperature by timesing it by 0.33 for example
+        self.reactor.set_peltier_temp(self.target_value * 0.33)
     #then pass it to the reactor which GETS time step forward? 
     
-    else
+    else:
     #pass the value to the microcontroller to be converted inside it with C code.
-    pass
+        pass
 
 # #test code for using functions defined in the parent class
 # if __name__ == '__main__':
