@@ -13,8 +13,7 @@ Created on Fri Apr 23 00:09:15 2021
 #in the case that this is passed to the simulated reactor it is converted to a
 #temperature. If not,the value is taken by the microcontroller file 
 
-#from effectors.base import EffectorBase        #imported the thermocouple information 
-#from sensors.thermocouple import thermocouple  #from folder.file import class
+
 from pid_control import PIDControl
 from reactor import reactor
 import microcontroller
@@ -44,7 +43,7 @@ class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherites fr
     if reactor.running():
     #convert the value to a temperature by timesing it by 0.33 for example
         self.reactor.set_peltier_temp(self.target_value * 0.33)
-    #then pass it to the reactor which GETS time step forward? 
+    #then pass it to the reactor
     
     else:
     #pass the value to the microcontroller to be converted inside it with C code.
