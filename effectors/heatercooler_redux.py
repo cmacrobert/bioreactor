@@ -22,7 +22,7 @@ from base import EffectorBase
 from sensors.thermocouple import thermocouple
 
 
-class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherites from these classes 
+class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherits from these classes 
                    #REMOVE EFFECTOR BASE IF YOU DELETE THE CLASS
     def __init__(self, reactor):    
             
