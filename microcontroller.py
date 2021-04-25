@@ -34,7 +34,7 @@ Created on Thu Apr 22 16:37:34 2021
  
 #below configures the PySerial Parametersand imports the serial module 
 #THESE ARE instructions on how to pass commands to the microcontoller 
- 
+#it assumes use of RS-232C protocol
 
 import serial 
  

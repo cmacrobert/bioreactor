@@ -4,15 +4,16 @@ Created on Fri Apr 23 00:09:15 2021
 
 @author: Nat
 """
+
+#example of the Peltier Module
+#https://www.cuidevices.com/product/resource/cp18-m.pdf
 #i want to it run an instance of the PID, with a gettable funtion output, 
 #this is the funtion in the pid_control
 
 #   def get_target(self, value):
-#        self.get_target(value) = 25                #using this value as a placeholder
 
 #in the case that this is passed to the simulated reactor it is converted to a
 #temperature. If not,the value is taken by the microcontroller file 
-
 
 from pid_control import PIDControl
 from reactor import reactor

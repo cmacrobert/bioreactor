@@ -50,7 +50,7 @@ class reactor():
                     -(T[i] - T[i - 1]) / dx ** 2 + (T[i + 1] - T[i]) / dx ** 2
                 )  # end nodes have boundary condition, left side
             dTdt[0] = alpha * (
-                -(T[0] - self.petlier_temp) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
+                -(T[0] - self.peltier_temp) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
             )  # generic for inner nodes
             # dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
