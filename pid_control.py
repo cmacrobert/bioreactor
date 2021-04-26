@@ -19,6 +19,7 @@ class PIDControl():
         self.running = False
         self.start_value = 0
         self.target_value = 0
+        self.current_value = 0
 
     def set_setpoint(self, new_setpoint):
         print("PIDControl: Changing setpoint to " + str(new_setpoint))
@@ -28,9 +29,6 @@ class PIDControl():
         print("PIDControl: Changing setpoint to " 
               + str(new_start_value))
         self.start_value = new_start_value
-        
-    def get_running(self):
-        return self.running
 
     def reset(self):    
         print("PIDControl: Restarting")    
@@ -46,66 +44,67 @@ class PIDControl():
         plt.ylim(0,55)
         plt.show()   
 
-    def get_target(self): # please get an output value for module to take (eg petlier module for temp)
+    '''def get_target(self): # please get an output value for module to take (eg petlier module for temp)
         #return target
         pass
 
     def get_current_value(self, module):
             module.get_value()         #get current value of input (eg peltier module / pressure sensor) 
-            #and apply to calculation
+            #and apply to calculation'''
 
-    def start(self):
-        """
-        Main loop for PID controller
-        Continually updates PID, calling plot function each iteration
-        """
-        print("PIDControl: Starting")
-        x=[]
-        y=[]
-        myplot = plt.plot(x,y)
+    def reset_vars(self):
+        print("PID controller: resetting")
+        self.x=[]
+        self.y=[]
+        plt.clf()
+        self.current_value = self.start_value
+        self.e_prev = 0
+        self.e = 0
+        self.time_rate = 0.001
+        self.t_prev = 0
+        self.t = 1
+        self.I = 0
+        self.Kp = 0.9
+        self.Ki = 0.1
+        self.Kd = 0.01
+        self.rate = 0.01
+        self.reset_scheduled = False
+
+    def update_pid(self):
+        if self.reset_scheduled:
+            self.reset_vars()
+            '''print("PID controller: resetting")
+            x=[]
+            y=[]
+            plt.clf()
+            # T = 0
+            self.current_value = self.start_value
+            e_prev = 0
+            e = 0
+            time_rate = 0.001
+            t_prev = 0
+            t = 1
+            I = 0
+            Kp = 0.9
+            Ki = 0.1
+            Kd = 0.01
+            rate = 0.01
+            self.reset_scheduled = False'''
+                
+        # PID calculations
+        self.e = self.setpoint - self.current_value            
+        self.P = (self.Kp*self.e)*self.rate
+        self.I = (self.I + self.Ki*self.e*(self.t - self.t_prev))*self.rate
+        self.D = (self.Kd*(self.e - self.e_prev)/(self.t - self.t_prev))*self.rate                
+        self.current_value = self.current_value + self.P + self.I + self.D
         
-        self.reset_scheduled = True        
-        self.running = True
-        
-        while self.running:
-            if self.reset_scheduled:
-                print("PID controller: resetting")
-                x=[]
-                y=[]
-                plt.clf()
-                # T = 0
-                val = self.start_value
-                e_prev = 0
-                e = 0
-                time_rate = 0.001
-                t_prev = 0
-                t = 1
-                I = 0
-                Kp = 0.9
-                Ki = 0.1
-                Kd = 0.01
-                rate = 0.01
-                self.reset_scheduled = False
-            
-            # PID calculations
-            e = self.setpoint - val            
-            P = (Kp*e)*rate
-            I = (I + Ki*e*(t - t_prev))*rate
-            D = (Kd*(e - e_prev)/(t - t_prev))*rate                
-            val = val + P + I + D
-                 
-            """ Update stored data for next iteration"""
-            e_prev = e
-            t_prev = t 
-            t = (t+1)                
-                        
-            x.append(t*time_rate)
-            y.append(val)                    
-            self.draw_plot(x, y)
-            self.target_value = val
-            time.sleep(time_rate)
-        print("PID controller: Exited loop")
-    
-    def stop(self):
-        print("PID controller: Stopping thread")
-        self.running = False
+        """ Update stored data for next iteration"""
+        self.e_prev = self.e
+        self.t_prev = self.t 
+        self.t = (self.t+1)                
+                    
+        self.x.append(self.t*self.time_rate)
+        self.y.append(self.current_value)                    
+        self.draw_plot(self.x, self.y)
+        self.target_value = self.current_value
+        time.sleep(self.time_rate)

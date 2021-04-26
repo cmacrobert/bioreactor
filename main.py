@@ -8,7 +8,7 @@ import thread_handler
 import time
 from inputs.input_returns import InputReturns as IR
 import inputs.input_handler as IH
-import pid_control
+import effectors.heatercooler_redux as HC
 import sys
 
 class Main():
@@ -16,7 +16,7 @@ class Main():
     def __init__(self):
         self.thread_handler = thread_handler.ThreadHandler()
         self.input_handler = IH.InputHandler()
-        self.pid_controller = pid_control.PIDControl()
+        self.heatercooler = HC.heatercooler()
         self.running = False
         self.shutting_down = False
         
@@ -26,7 +26,7 @@ class Main():
         TODO: rename stop() functions? Only ending main loop, not thread
         """
         self.input_handler.stop()
-        self.pid_controller.stop()
+        self.heatercooler.stop()
         self.thread_handler.stop_threads()
         self.running = False
         
@@ -37,17 +37,17 @@ class Main():
         if command == IR.NONE:
             """ TODO: throw error. We should't be able to get here"""
             print("Main: Error with command handling, received IR.NONE")
-        elif command == IR.PID_SET_SETPOINT:
+        elif command == IR.TEMPERATURE_SET_SETPOINT:
             new_setpoint = self.input_handler.get_return_value()
             self.input_handler.reset_return_value()
-            self.pid_controller.set_setpoint(new_setpoint)
-        elif command == IR.PID_SET_START:
+            self.heatercooler.set_setpoint(new_setpoint)
+        elif command == IR.TEMPERATURE_SET_START:
             new_start = self.input_handler.get_return_value()
             self.input_handler.reset_return_value()
-            self.pid_controller.set_start_temperature(new_start)
+            self.heatercooler.set_start_value(new_start)
             print("Main: Start value applied, will take effect on reset")
-        elif command == IR.PID_RESET:
-            self.pid_controller.reset()
+        elif command == IR.TEMPERATURE_RESET:
+            self.heatercooler.reset()
         elif command == IR.GET_TEMPERATURE:
             """ TODO: return call to get thermocouple temperature"""
             print("Main: command " + str(command) + "not implemented")
@@ -62,14 +62,14 @@ class Main():
     
     def main(self):
         """
-        Main loop starts threads for input handler and PID
+        Main loop starts threads for input handler and effectors
             then continually polls for input commands to handle
             Currently waiting 1 second between polling, to aid debugging
         """
         self.thread_handler.start_thread("input",
-                                         self.input_handler.start)            
-        self.thread_handler.start_thread("pid",
-                                         self.pid_controller.start)
+                                         self.input_handler.start)
+        self.thread_handler.start_thread("heatercooler",
+                                         self.heatercooler.start)
         
         self.running = True
         while (self.running == True):
@@ -86,7 +86,7 @@ class Main():
         while (self.shutting_down == True):
             """ Check all other threaded processes have stopped"""
             if (self.input_handler.get_running() == False and 
-                self.pid_controller.get_running() == False):
+                self.heatercooler.get_running() == False):
                 self.shutting_down = False
         print("Main: Shutdown complete")
 

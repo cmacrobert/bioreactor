@@ -15,23 +15,19 @@ Created on Fri Apr 23 00:09:15 2021
 #in the case that this is passed to the simulated reactor it is converted to a
 #temperature. If not,the value is taken by the microcontroller file 
 
-from pid_control import PIDControl
-from reactor import reactor
-import microcontroller
-from base import EffectorBase
+#from reactor import reactor
+#import microcontroller
+from effectors.base import EffectorBase
 from sensors.thermocouple import thermocouple
 
 
-class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherits from these classes 
-                   #REMOVE EFFECTOR BASE IF YOU DELETE THE CLASS
-    def __init__(self, reactor):    
-            
-        # EffectorBase.__init__(self)                 # DOES NOTHING!
-        PIDControl.__init__(self)
+class heatercooler(EffectorBase):  #establishes class  #inherits from these classes 
+    
+    def __init__(self):#, reactor):       
+        EffectorBase.__init__(self, "HeaterCooler")
         # self.label = "heaterPID"
-        self.reactor = reactor                           # link to reactor
-        self.thermocouple = thermocouple(self.reactor) #link to thermocouple (link thermocouple to reactor)
-                                                
+        #self.reactor = reactor                           # link to reactor
+        #self.thermocouple = thermocouple(self.reactor) #link to thermocouple (link thermocouple to reactor)
         
     def set_target_temp(self, temp):                  # Get user's target temp
         self.set_setpoint(temp)
@@ -41,17 +37,25 @@ class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherits fro
         
    
     def pass_the_value(self):
-    if reactor.running():
-    value should already be a temperature, but need to remember that it has a limited range, so calibration equation might be needed
-        self.reactor.set_peltier_temp(self.target_value * 0.4)
+        if reactor.running():
+    #value should already be a temperature, but need to remember that it has a limited range, so calibration equation might be needed
+            self.reactor.set_peltier_temp(self.target_value * 0.4)
     #then pass it to the reactor
     
-    else:
+        else:
     #pass the value to the microcontroller to be converted inside it with C code.
-        pass
+            pass
 
 # #test code for using functions defined in the parent class
 # if __name__ == '__main__':
 #     heatercooler = heatercooler(reactor()) #passes reactor to the heatercooler, modules can now interact
 #     print(heatercooler.thermocouple.get_temperature()) #refers to  self.thermocouple = thermocouple(reactor)
  
+    def start(self):
+        print("HeaterCooler: Starting")
+        self.reset_scheduled = True        
+        self.running = True
+        
+        while self.running:            
+            self.update_pid()
+        print("HeaterCooler: Exited loop")
