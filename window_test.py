@@ -57,11 +57,7 @@ class WindowTest():
                              command=self.shut_down)
         btn_quit.pack()    
         
-        
-        ''' Define sine wave for testing'''
-        #x = np.arange(8000)
-        #y = np.sin(2*np.pi*self.freq*x / 8000)
-        
+                
         ''' Matplotlib plot'''        
         figure = plt.figure(figsize=(6,5), dpi=100)
         self.ax = figure.add_subplot(111)
@@ -89,6 +85,8 @@ class WindowTest():
         self.plot_canvas.draw_idle()
         
     def check_for_updates(self):
+        #TODO: ensure this gets cancelled when we want to shut down
+        # currently having issue where it lingers on subsequent runs
         print("Checking for updates")
         
         ''' Schedule update function again'''

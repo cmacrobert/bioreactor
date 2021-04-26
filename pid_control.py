@@ -20,6 +20,11 @@ class PIDControl():
         self.start_value = 0
         self.target_value = 0
         self.current_value = 0
+        self.x = 0
+        self.y = 0
+
+    def get_setpoint(self):
+        return self.setpoint
 
     def set_setpoint(self, new_setpoint):
         print("PIDControl: Changing setpoint to " + str(new_setpoint))
@@ -33,6 +38,12 @@ class PIDControl():
     def reset(self):    
         print("PIDControl: Restarting")    
         self.reset_scheduled = True
+
+    def get_x(self):
+        return self.x
+    
+    def get_y(self):
+        return self.y
 
     def draw_plot(self, x, y):
         #TODO: do plotting in separate file/thread with own timing?
@@ -56,7 +67,7 @@ class PIDControl():
         print("PID controller: resetting")
         self.x=[]
         self.y=[]
-        plt.clf()
+        #plt.clf()
         self.current_value = self.start_value
         self.e_prev = 0
         self.e = 0
@@ -73,23 +84,6 @@ class PIDControl():
     def update_pid(self):
         if self.reset_scheduled:
             self.reset_vars()
-            '''print("PID controller: resetting")
-            x=[]
-            y=[]
-            plt.clf()
-            # T = 0
-            self.current_value = self.start_value
-            e_prev = 0
-            e = 0
-            time_rate = 0.001
-            t_prev = 0
-            t = 1
-            I = 0
-            Kp = 0.9
-            Ki = 0.1
-            Kd = 0.01
-            rate = 0.01
-            self.reset_scheduled = False'''
                 
         # PID calculations
         self.e = self.setpoint - self.current_value            
@@ -105,6 +99,6 @@ class PIDControl():
                     
         self.x.append(self.t*self.time_rate)
         self.y.append(self.current_value)                    
-        self.draw_plot(self.x, self.y)
+        #self.draw_plot(self.x, self.y)
         self.target_value = self.current_value
         time.sleep(self.time_rate)
