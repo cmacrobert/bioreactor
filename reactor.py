@@ -33,6 +33,14 @@ class reactor():
 
     def set_peltier_temp(self, temp):
         self.peltier_temp = temp
+        
+        
+    
+    def set_peltier_temp(self, phinput):
+        self.set_input_ph = 
+        #not yet used, needs to run a ph simulation, can it piggyback off the temperature simulation??
+            
+    
      
     def reset_temperature(self): 
         print('Reactor - Resetting temperature') 
@@ -64,7 +72,7 @@ class reactor():
     
         # need to preserve Ts between cycles
         return T
-    
+        #the above is plot information, can be somewhat removed, though use discretion
 
 L = 0.21  # radius of sphere in m
 n = 10  # number of divisions
@@ -89,3 +97,11 @@ while running:
     reactor.set_temperature = T[7]
     if __name__ == "__main__": #the if statement will not work in a thread
         time.sleep(0.2)         #in that case the overall program decides when sleeping happens
+
+
+#_____________________________________________________________________________
+#need to try to make a ph simulation now. 
+
+
+
+

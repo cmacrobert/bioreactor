@@ -42,7 +42,7 @@ class heatercooler(EffectorBase, PIDControl):  #establishes class  #inherits fro
    
     def pass_the_value(self):
     if reactor.running():
-    #convert the value to a temperature by timesing it by 0.33 for example
+    value should already be a temperature, but need to remember that it has a limited range, so calibration equation might be needed
         self.reactor.set_peltier_temp(self.target_value * 0.4)
     #then pass it to the reactor
     
