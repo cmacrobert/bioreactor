@@ -31,6 +31,7 @@ class reactor():
         print('Reactor - Setting temperature to ' + value) 
         self.temperature = value 
 
+
     def set_peltier_temp(self, temp):
         self.peltier_temp = temp
         
@@ -39,7 +40,8 @@ class reactor():
     def set_ph_input(self, phinput):
         self.set_phinput = ph
         #not yet used, needs to be incorporated into a pH simulation
-#___________________________________________________________________         
+        
+#___________________________________________________________________
     #MIRRIN
     def set_pressure_input(self, pressure):
         self.set_pressureinput = pressure
