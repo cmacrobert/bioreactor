@@ -31,17 +31,23 @@ class reactor():
         print('Reactor - Setting temperature to ' + value) 
         self.temperature = value 
 
+
     def set_peltier_temp(self, temp):
         self.peltier_temp = temp
         
+#___________________________________________________________________        
+    
+    def set_ph_input(self, phinput):
+        self.set_phinput = ph
+        #not yet used, needs to be incorporated into a pH simulation
         
-    
-    def set_peltier_temp(self, phinput):
-        self.set_input_ph = 
-        #not yet used, needs to run a ph simulation, can it piggyback off the temperature simulation??
-            
-    
-     
+#___________________________________________________________________
+    #MIRRIN
+    def set_pressure_input(self, pressure):
+        self.set_pressureinput = pressure
+        #not yet used by reactor
+        
+#___________________________________________________________________    
     def reset_temperature(self): 
         print('Reactor - Resetting temperature') 
         self.temperature = self.initialtemperature 

@@ -36,7 +36,7 @@ class phcontrol(EffectorBase, PIDControl):  #establishes class  #inherits from t
     def pass_the_value(self):
     if reactor.running():
     #value should already be in ph, but need to remember that it is limited, so calibration equation might be needed
-        self.reactor.set_ph(self.target_value)
+        self.reactor.set_ph_input(self.target_value)
     #then pass it to the reactor
     
     else:
