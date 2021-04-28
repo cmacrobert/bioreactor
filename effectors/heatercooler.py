@@ -11,7 +11,6 @@ Created on Tue Apr 27 16:37:04 2021
 
 from effectors.base import EffectorBase
 
-
 class heatercooler(EffectorBase):  
     
     def __init__(self):      
@@ -21,8 +20,9 @@ class heatercooler(EffectorBase):
         self.set_setpoint(temp)
         
     #please check!
-    def peltier_value(self):
-        self.get_current_value() #using the function in pid_control. 
+    #def peltier_value(self):
+    #    self.get_current_value() #using the function in pid_control. 
+    # equivalent to heatercooler.get_current_value
 
     def start(self):
         print("HeaterCooler: Starting")

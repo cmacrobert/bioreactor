@@ -16,7 +16,3 @@ class phsensor(SensorBase):     #establishes class thermocouple which inherits f
         super().__init__()          #improved syntax, it means super(ChildB, self).__init__() 
         self.label = 'phsensor'     #this is the name of the object
  
-
-
-#I need to set up ph simulation in the reactor 
-#I need to make a PID control file for pH. 
