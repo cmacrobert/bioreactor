@@ -156,7 +156,7 @@ class reactor():
                 -(P[0] - self.ph_into_reactor) / dx ** 2 + (P[0 + 1] - P[0]) / dx ** 2
             )  # generic for inner nodes
             # dPdt[n-1] = alpha*(-(P[n-1]-P[n-1-1])/dx**2+(P2s-P[n-1])/dx**2) #the n-1 node
-            #agghh need to rerun the simulation with that back in
+           
             P = P + dPdt * dt  # continuously update ph vector, gets overwritten each time
             # plt.figure(1) 
             # plt.plot(x, P)
