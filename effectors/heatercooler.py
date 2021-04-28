@@ -19,10 +19,6 @@ class heatercooler(EffectorBase):
     def set_target_temp(self, temp):  # Get user's target temp
         self.set_setpoint(temp)
         
-    #please check!
-    #def peltier_value(self):
-    #    self.get_current_value() #using the function in pid_control. 
-    # equivalent to heatercooler.get_current_value
 
     def start(self):
         print("HeaterCooler: Starting")
