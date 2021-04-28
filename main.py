@@ -10,6 +10,7 @@ from inputs.input_returns import InputReturns as IR
 import inputs.input_handler as IH
 import effectors.heatercooler_redux as HC
 import sys
+import reactor
 
 class Main():
     
@@ -17,8 +18,10 @@ class Main():
         self.thread_handler = thread_handler.ThreadHandler()
         self.input_handler = IH.InputHandler()
         self.heatercooler = HC.heatercooler()
+        self.reactor = reactor.reactor()
         self.running = False
         self.shutting_down = False
+        self.thermocouple
         
     def shut_down(self):
         """
@@ -27,6 +30,7 @@ class Main():
         """
         self.input_handler.stop()
         self.heatercooler.stop()
+        self.reactor.stop()        
         self.thread_handler.stop_threads()
         self.running = False
         
@@ -60,6 +64,20 @@ class Main():
         elif command == IR.SHUT_DOWN:
             self.shut_down()
     
+    def updater(self):     #grabs values from reactor, passes them to places. 
+        self.thermocouple.set_sensor_value(self.reactor.get_temperature())
+        self.heatercooler.set_current_value(self.thermocouple.get_sensor_value())
+        #nat attempt below! sombody please check this! PLEASE!! I think i made it clunky...
+        self.reactor.set_peltier_temp(self.heatercooler.peltier_value())
+        
+        #check the below please!
+        #structure for the pH control, following the new format. 
+        self.phsensor.set_sensor_value(self.reactor.get_ph()) #get_ph doesnt exsist yet 
+        self.phcontrol.set_current_value(self.phsensor.get_sensor_value())
+        self.reactor.set_ph(self.phcontrol.ph_into_reactor())
+        
+        
+        
     def main(self):
         """
         Main loop starts threads for input handler and effectors
@@ -70,7 +88,8 @@ class Main():
                                          self.input_handler.start)
         self.thread_handler.start_thread("heatercooler",
                                          self.heatercooler.start)
-        
+        self.thread_handler.start_thread("reactor",
+                                         self.reactor.start)        
         self.running = True
         while (self.running == True):
             time.sleep(1)   # Delay when polling, mainly for debugging
@@ -86,7 +105,8 @@ class Main():
         while (self.shutting_down == True):
             """ Check all other threaded processes have stopped"""
             if (self.input_handler.get_running() == False and 
-                self.heatercooler.get_running() == False):
+                self.heatercooler.get_running() == False and
+                self.reactor.get_running() == False):            
                 self.shutting_down = False
         print("Main: Shutdown complete")
 

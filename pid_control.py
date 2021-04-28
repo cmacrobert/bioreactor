@@ -30,6 +30,13 @@ class PIDControl():
               + str(new_start_value))
         self.start_value = new_start_value
 
+    def set_current_value(self, new_current_value):
+        self.current_value = new_current_value
+        
+    def get_current_value(self):
+        return self.current_value
+    
+        
     def reset(self):    
         print("PIDControl: Restarting")    
         self.reset_scheduled = True
