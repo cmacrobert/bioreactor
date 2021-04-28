@@ -5,11 +5,7 @@ Created on Tue Mar  9 10:37:10 2021
 @author: Stefan Olsson
 """
 
-# Changed temperature to "value to make this PID more generic so it can be inherited by other PIDs"
-
 import time
-import matplotlib.pyplot as plt
-import random
 
 class PIDControl():    
 
@@ -45,29 +41,10 @@ class PIDControl():
     def get_y(self):
         return self.y
 
-    def draw_plot(self, x, y):
-        #TODO: do plotting in separate file/thread with own timing?
-            #currently the draw call is massively affecting the PID speed
-        plt.close()
-        plt.plot(x,y)
-        plt.hlines(self.setpoint, 0, 5, 'C1', 'dashed')
-        plt.xlim(0,1)
-        plt.ylim(0,55)
-        plt.show()   
-
-    '''def get_target(self): # please get an output value for module to take (eg petlier module for temp)
-        #return target
-        pass
-
-    def get_current_value(self, module):
-            module.get_value()         #get current value of input (eg peltier module / pressure sensor) 
-            #and apply to calculation'''
-
     def reset_vars(self):
         print("PID controller: resetting")
         self.x=[]
         self.y=[]
-        #plt.clf()
         self.current_value = self.start_value
         self.e_prev = 0
         self.e = 0
@@ -98,7 +75,6 @@ class PIDControl():
         self.t = (self.t+1)                
                     
         self.x.append(self.t*self.time_rate)
-        self.y.append(self.current_value)                    
-        #self.draw_plot(self.x, self.y)
+        self.y.append(self.current_value)
         self.target_value = self.current_value
         time.sleep(self.time_rate)
