@@ -8,7 +8,7 @@ import thread_handler
 import time
 from inputs.input_returns import InputReturns as IR
 import inputs.input_handler as IH
-import effectors.heatercooler_redux as HC
+import effectors.heatercooler as HC
 import sys
 import reactor
 
@@ -21,7 +21,6 @@ class Main():
         self.reactor = reactor.reactor()
         self.running = False
         self.shutting_down = False
-        self.thermocouple
         
     def shut_down(self):
         """
@@ -67,14 +66,13 @@ class Main():
     def updater(self):     #grabs values from reactor, passes them to places. 
         self.thermocouple.set_sensor_value(self.reactor.get_temperature())
         self.heatercooler.set_current_value(self.thermocouple.get_sensor_value())
-        #nat attempt below! sombody please check this! PLEASE!! I think i made it clunky...
-        self.reactor.set_peltier_temp(self.heatercooler.peltier_value())
+        self.reactor.set_peltier_temp(self.heatercooler.get_current_value())
         
         #check the below please!
         #structure for the pH control, following the new format. 
         self.phsensor.set_sensor_value(self.reactor.get_ph()) #get_ph doesnt exsist yet 
         self.phcontrol.set_current_value(self.phsensor.get_sensor_value())
-        self.reactor.set_ph(self.phcontrol.ph_into_reactor())
+        self.reactor.set_ph(self.phcontrol.get_current_value())
         
         
         

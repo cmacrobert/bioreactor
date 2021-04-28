@@ -19,15 +19,10 @@ class phcontrol(EffectorBase):
     def set_target_ph(self, ph):                  # Get user's target temp
         self.set_setpoint(ph)
     
-    #def get_current_temp(self,ph):
-    #    self.get_current_value(self.phsensor)
-    #does this need to get removed? might be redundant...     
-    #^its deleted from reactor 
-    
     #please check!
-    def ph_into_reactor(self):
-        self.get_current_value() #using the function in pid_control. 
-
+    #def ph_into_reactor(self):
+    #   self.get_current_value() #using the function in pid_control. 
+    # equivalent to phcontorl.get_current_value
 
     def start(self):
         print("HeaterCooler: Starting")

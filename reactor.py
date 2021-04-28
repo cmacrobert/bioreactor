@@ -11,7 +11,7 @@ import time
 
 class reactor():
      
-    def __init__ (self, temperature=15): 
+    def __init__ (self, temperature=15, ph=7): 
         #self.name = name #argument name is passed thorugh init statement
         self.temperature = temperature 
         self.initialtemperature = temperature 
@@ -19,11 +19,13 @@ class reactor():
         self.running = False
 
         #i guess it needs more inits
-        self.ph = hp 
+        self.ph = ph
         self.initialph = ph
         self.ph_into_reactor = ph #i hope so
         #self.running = False
-        
+        self.name = "Reactor"
+        self.P = ph
+        self.T = temperature
         
     def say(self): 
         print("Reactor - Temperature is " + str(self.temperature) + " degrees..." ) 
@@ -31,13 +33,7 @@ class reactor():
     def get_temperature(self): 
         print('Reactor - Getting temperature') 
         return self.temperature 
- 
-    # def set_temperature(self, value): 
-    #     print('Reactor - Setting temperature to ' + value) 
-    #     self.temperature = value #removed becasue it wasn't useful
-    
-    
-    #PLEASE CHECK THE BELOW!!
+
     def set_peltier_temp(self, temp):
         self.peltier_temp = temp
         
@@ -45,10 +41,11 @@ class reactor():
     def get_ph(self): 
         print('Reactor - Getting ph') 
         return self.ph 
-
+        pass
+    
     def set_ph_input(self, phinput):
-        self.ph_into_reactor = ph #hhmmm
-       
+        self.ph_into_reactor = phinput #hhmmm
+        pass
     
 #___________________________________________________________________
     #MIRRIN
@@ -57,8 +54,8 @@ class reactor():
         #not yet used by reactor
         pass
     
-    def get(p):
-        pass
+    #def get(p):
+     #   pass
     
 #___________________________________________________________________    
     def reset_temperature(self): 
@@ -68,6 +65,22 @@ class reactor():
      
     
     def reactor_heating_cycle(self, T):
+        
+        L = 0.21  # radius of sphere in m
+        n = 10  # number of divisions
+        T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
+        # T1s = 27  # peltier temperature needs to be integrated as this value
+        T2s = 15  # external temperature
+        dx = L / n
+        alpha = 0.00143
+        t_final = 1  # time interval lasts one second
+        dt = 0.1  # this is the time step
+        x = np.linspace(dx / 2, L - dx / 2, n)
+        T = np.ones(n) * T0  # start temperature vector
+        # but i want each to be taken from the last iteration
+        dTdt = np.empty(n)  # define empty vector
+
+
         t = np.arange(0, t_final, dt)
     
         for j in range(1, len(t)):  # looping for all elements in t
@@ -81,13 +94,13 @@ class reactor():
             )  # generic for inner nodes
             # dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
-            plt.figure(1) 
-            plt.plot(x, T)
-            plt.axis([0, L, 10, 35])
-            plt.xlabel("Distance (m)")
-            plt.ylabel("Temperature (C)")
-            plt.show()
-            plt.pause(0.05)
+            # plt.figure(1) 
+            # plt.plot(x, T)
+            # plt.axis([0, L, 10, 35])
+            # plt.xlabel("Distance (m)")
+            # plt.ylabel("Temperature (C)")
+            # plt.show()
+            # plt.pause(0.05)
     
         # need to preserve Ts between cycles
         return T
@@ -98,22 +111,9 @@ class reactor():
        self.running = True
        
        while self.running: 
-           T = self.reactor_heating_cycle(T) #function belongs to the reactor
-           self.temperature = T[7]
+           self.T = self.reactor_heating_cycle(self.T) #function belongs to the reactor
+           self.temperature = self.T[7]
        
-L = 0.21  # radius of sphere in m
-n = 10  # number of divisions
-T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
-# T1s = 27  # peltier temperature needs to be integrated as this value
-T2s = 15  # external temperature
-dx = L / n
-alpha = 0.00143
-t_final = 1  # time interval lasts one second
-dt = 0.1  # this is the time step
-x = np.linspace(dx / 2, L - dx / 2, n)
-T = np.ones(n) * T0  # start temperature vector
-# but i want each to be taken from the last iteration
-dTdt = np.empty(n)  # define empty vector
 
  
 #_____________________________________________________________________________
@@ -128,6 +128,22 @@ dTdt = np.empty(n)  # define empty vector
      
     
     def reactor_ph_cycle(self, P):
+        
+        L = 0.21  # radius of sphere in m
+        n = 10  # number of divisions
+        P0 = 7  # assumes start reacotr temp is 7, tho needs to be taken from last time interval
+        # P1s = 27  # input to reactor ph needs to be integrated as this value
+        P2s = 4  # external ph, or the ph the system tends towards, i assumed it becomes acidic
+        dx = L / n
+        alpha = 0.00143
+        t_final = 1  # time interval lasts one second
+        dt = 0.1  # this is the time step
+        x = np.linspace(dx / 2, L - dx / 2, n)
+        P = np.ones(n) * P0  # start ph vector
+        # but i want each to be taken from the last iteration
+        dPdt = np.empty(n)  # define empty vector
+
+        
         t = np.arange(0, t_final, dt)
     
         for j in range(1, len(t)):  # looping for all elements in t
@@ -142,13 +158,13 @@ dTdt = np.empty(n)  # define empty vector
             # dPdt[n-1] = alpha*(-(P[n-1]-P[n-1-1])/dx**2+(P2s-P[n-1])/dx**2) #the n-1 node
             #agghh need to rerun the simulation with that back in
             P = P + dPdt * dt  # continuously update ph vector, gets overwritten each time
-            plt.figure(1) 
-            plt.plot(x, P)
-            plt.axis([0, L, 10, 35])
-            plt.xlabel("Distance (m)")
-            plt.ylabel("pH")
-            plt.show()
-            plt.pause(0.05)
+            # plt.figure(1) 
+            # plt.plot(x, P)
+            # plt.axis([0, L, 10, 35])
+            # plt.xlabel("Distance (m)")
+            # plt.ylabel("pH")
+            # plt.show()
+            # plt.pause(0.05)
     
         # need to preserve Ps between cycles
         return P
@@ -156,26 +172,12 @@ dTdt = np.empty(n)  # define empty vector
    
         
     def start(self):
-       self.running = True
+        self.running = True
        
-       while self.running: 
-           P = self.reactor_ph_cycle(P) #function belongs to the reactor
-           self.ph = P[7]
-
-#should i make all these self? they have shared fuctionality
-#or should i rediefine them all as new variables?
-L = 0.21  # radius of sphere in m
-n = 10  # number of divisions
-P0 = 7  # assumes start reacotr temp is 7, tho needs to be taken from last time interval
-# P1s = 27  # input to reactor ph needs to be integrated as this value
-P2s = 4  # external ph, or the ph the system tends towards, i assumed it becomes acidic
-dx = L / n
-alpha = 0.00143
-t_final = 1  # time interval lasts one second
-dt = 0.1  # this is the time step
-x = np.linspace(dx / 2, L - dx / 2, n)
-P = np.ones(n) * P0  # start ph vector
-# but i want each to be taken from the last iteration
-dPdt = np.empty(n)  # define empty vector
-
-
+        while self.running: 
+           self.P = self.reactor_ph_cycle(self.P) #function belongs to the reactor
+           self.ph = self.P[7]
+           
+    def stop(self):
+        print(self.name + ": Stopping thread")
+        self.running = False
