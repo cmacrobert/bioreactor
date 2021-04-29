@@ -12,9 +12,17 @@ class EffectorBase(PIDControl):
     def __init__(self, name):        
         PIDControl.__init__(self)
         self.name = name
+        self.title = ""
+        self.y_axis_label = ""
             
     def get_running(self):
         return self.running
+    
+    def get_title(self):
+        return self.title
+    
+    def get_y_label(self):
+        return self.y_axis_label
     
     def stop(self):
         print(self.name + ": Stopping thread")

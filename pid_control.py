@@ -11,7 +11,6 @@ class PIDControl():
 
     def __init__ (self):
         print("PIDControl: Initialising")
-        self.setpoint = 37
         self.running = False
         self.start_value = 0
         self.target_value = 0
@@ -51,7 +50,7 @@ class PIDControl():
     
     def get_y(self):
         return self.y
-
+    
     def reset_vars(self):
         print("PID controller: resetting")
         self.x=[]
@@ -90,7 +89,15 @@ class PIDControl():
         self.e_prev = self.e
         self.t_prev = self.t 
         self.t = (self.t+1)   
-        self.t_counter = (self.t_counter+1)          
+        self.t_counter = (self.t_counter+1)  
+        
+        if self.t_counter >= (self.rangeDiff/self.time_rate):
+            print("t_counter = " + str(self.t_counter))
+            print("rangeDiff=" + str(self.rangeDiff) + ", time rate=" + str(self.time_rate))
+            self.lowerRange = self.upperRange
+            self.upperRange += self.rangeDiff
+            self.t_counter = 0
+            print("restarting t counter")
                     
         self.x.append(self.t*self.time_rate)
         self.y.append(self.current_value)

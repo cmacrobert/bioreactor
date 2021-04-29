@@ -13,8 +13,6 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-effectorNumb = 2
-
 class Main():
     
     def __init__(self):
@@ -24,7 +22,9 @@ class Main():
         self.reactor = reactor.reactor()
         self.running = False
         self.shutting_down = False
-        self.update_delay = 1
+        self.update_delay = 250
+        self.should_update_setpoint = False
+        self.should_update_spinbox = False
         
     def shut_down(self):
         """
@@ -45,7 +45,7 @@ class Main():
         print("Main - Starting drawing")
         self.m = tk.Tk(className='Bioreactor Simulator')
         self.m.title("Bioreactor Simulator")
-        self.m.geometry("800x600")
+        self.m.geometry("800x800")
         self.m['background']='white'
         
         ''' Canvas, used for drawing manually '''
@@ -58,7 +58,7 @@ class Main():
         ''' File - Reset and Exit'''
         self.filemenu = tk.Menu(self.menu)
         self.menu.add_cascade(label='File', menu=self.filemenu)
-        self.filemenu.add_command(label='Reset', command=self.button_pressed)
+        self.filemenu.add_command(label='Reset', command=self.on_reset)
         self.filemenu.add_separator()
         self.filemenu.add_command(label='Exit', command=self.on_closing)
         ''' Help - About'''
@@ -66,24 +66,53 @@ class Main():
         self.menu.add_cascade(label='Help', menu=self.helpmenu)
         self.helpmenu.add_command(label='About', command=self.show_about)
         
-        #''' Text entry box '''
-        #tk.Label(canvas, text='Text Entry').grid(row=0)
-        #self.txtentry = tk.Entry(canvas)
-        #self.txtentry.grid(row=0, column=1)
-        
-        #''' Buttons '''
-        #btn_reset = tk.Button(self.m, text='Reset', width=25, 
-        #                     command=self.button_pressed)
-        #btn_reset.pack()        
-        #btn_quit = tk.Button(self.m, text='Quit', width=25, 
-        #                     command=self.on_closing)
-        #btn_quit.pack()
+        ''' Buttons '''
+        btn_setpoint = tk.Button(self.m, text='Set Setpoint', width=25, 
+                             command=self.set_setpoint)
+        btn_setpoint.pack()
                 
         ''' Matplotlib plot '''        
         figure = plt.figure(figsize=(6,5), dpi=100)
         self.ax = figure.add_subplot(111)
         self.plot_canvas = FigureCanvasTkAgg(figure, master=canvas)#self.m)
         self.plot_canvas.get_tk_widget().pack()
+        
+        ''' Radio buttons and label '''
+        frame_plot_select = tk.Frame(self.m, width=200, height=200)
+        frame_plot_select.pack()        
+        label_plot_select = tk.Label(frame_plot_select, text="Plot Shown:", justify=tk.LEFT)
+        label_plot_select.pack()
+        self.selected_plot = tk.IntVar(self.m)
+        radbtn_temp = tk.Radiobutton(frame_plot_select, text="Temperature", indicatoron=0,
+                                     variable=self.selected_plot, value=0,
+                                     command=self.change_plot_source)
+        radbtn_temp.pack()
+        radbtn_ph = tk.Radiobutton(frame_plot_select, text="pH", indicatoron=0,
+                                   variable=self.selected_plot, value=1,
+                                   command=self.change_plot_source)
+        radbtn_ph.pack()
+        
+        ''' Spinbox for setting setpoint '''
+        self.spinbox = spinbox=tk.Spinbox(self.m)
+        spinbox.pack()
+        
+        ''' Labels for current values'''     
+        frame_labels = tk.Frame(self.m, width=200, height=200)
+        frame_labels.pack()
+        
+        frame_label_temp = tk.Frame(frame_labels, width=200, height=100)
+        frame_label_temp.pack()
+        label_temp = tk.Label(frame_label_temp, text="Temperature:", justify=tk.LEFT)
+        label_temp.pack(side=tk.LEFT)
+        self.label_temp = tk.Label(frame_label_temp, text="0", justify=tk.LEFT)
+        self.label_temp.pack(side=tk.RIGHT)
+        
+        frame_label_ph = tk.Frame(frame_labels, width=200, height=100)
+        frame_label_ph.pack()
+        label_ph = tk.Label(frame_label_ph, text="pH:", justify=tk.LEFT)
+        label_ph.pack(side=tk.LEFT)
+        self.label_ph = tk.Label(frame_label_ph, text="0", justify=tk.LEFT)
+        self.label_ph.pack(side=tk.RIGHT)
     
         ''' Call the gui_update function once, after set time has passed '''
         self.window_update = self.m.after(self.update_delay, 
@@ -94,6 +123,10 @@ class Main():
     
         ''' Start main loop (do this last) '''
         self.m.mainloop()
+        
+    def change_plot_source(self):
+        print("Main: radio button " + str(self.selected_plot.get()) + " selected")
+        self.should_update_spinbox = True
         
     def on_closing(self):
         #TODO: clear display and replace with "shutting down" message
@@ -110,67 +143,58 @@ lines"""
         self.messagebox = tk.messagebox.Message(self.m)
         self.messagebox.show(title="About", message=message_to_show)
         
+    def set_setpoint(self):
+        print("Main: Setting setpoint")
+        self.should_update_setpoint = True
+                
     def draw_plot(self):
         ''' Draw plot on canvas after getting latest x and y values'''
-        #TODO: make this more generic, not just for heatercooler
-        if effectorNumb == 1:
+        if self.selected_plot.get() == 0:
             effector = self.heatercooler
-        else:
-            effector = self.phcontrol
+        elif self.selected_plot.get() == 1:
+            effector = self.phcontrol            
+                    
+        if(self.should_update_setpoint == True):
+            newsetpoint = float(self.spinbox.get())
+            print("Main: Setting setpoint to " + str(newsetpoint))
+            effector.set_setpoint(newsetpoint)
+            self.should_update_setpoint = False
         
-        """x = self.heatercooler.get_x()
-        y = self.heatercooler.get_y()
-        setpoint = self.heatercooler.get_setpoint()
-        
-        lowerRange = self.heatercooler.lowerRange
-        upperRange = self.heatercooler.upperRange
-        
-        lowerDomain = self.heatercooler.lowerDomain
-        upperDomain = self.heatercooler.upperDomain
-        
-        self.ax.clear()
-        self.ax.plot(x,y)
-        self.ax.hlines(setpoint,lowerRange,upperRange, 'C1', 'dashed')
-        if self.heatercooler.t_counter >= (upperRange/self.heatercooler.time_rate):
-            self.heatercooler.lowerRange = self.heatercooler.upperRange
-            self.heatercooler.upperRange += self.heatercooler.rangeDiff
-            self.heatercooler.t_counter = 0
-            print("restarting t counter")
-        plt.xlim(lowerRange,upperRange)
-        plt.ylim(lowerDomain,upperDomain)
-        self.plot_canvas.draw_idle()"""
-        
-        x = effector.get_x()
-        y = effector.get_y()
-        setpoint = effector.get_setpoint()
-        
+        setpoint = effector.get_setpoint()        
         lowerRange = effector.lowerRange
-        upperRange = effector.upperRange
-        
+        upperRange = effector.upperRange        
         lowerDomain = effector.lowerDomain
         upperDomain = effector.upperDomain
         
+        self.spinbox.config(from_=lowerDomain, to=upperDomain)
+        if(self.should_update_spinbox == True):
+            self.spinbox.delete(0, 'end')
+            self.spinbox.insert(0, setpoint)
+            self.should_update_spinbox = False
+        
         self.ax.clear()
-        self.ax.plot(x,y)
-        self.ax.hlines(setpoint,lowerRange,upperRange, 'C1', 'dashed')
-        if effector.t_counter >= (effector.rangeDiff/effector.time_rate):
-            effector.lowerRange = effector.upperRange
-            effector.upperRange += effector.rangeDiff
-            effector.t_counter = 0
-            print("restarting t counter")
+        self.ax.plot(effector.get_x(),effector.get_y())
+        self.ax.hlines(setpoint, lowerRange, upperRange, 'C1', 'dashed')
+        
         plt.xlim(lowerRange,upperRange)
         plt.ylim(lowerDomain,upperDomain)
+        self.ax.set_title(effector.get_title())
+        self.ax.set_ylabel(effector.get_y_label())
+        self.ax.set_xlabel("Time (s)")
         self.plot_canvas.draw_idle()
         
     def gui_update(self):
         ''' Update GUI, refreshing plots '''
         self.draw_plot()
         
+        self.label_temp.config(text=str(round(self.heatercooler.get_current_value(), 3)))
+        self.label_ph.config(text=str(round(self.phcontrol.get_current_value(), 1)))
+        
         ''' Schedule update function again'''
         self.window_update = self.m.after(self.update_delay,
                                           self.gui_update)
         
-    def button_pressed(self):
+    def on_reset(self):
         print("Main - Button was pressed")
         #print("Main - Text entry contents = " + str(self.txtentry.get()))
         self.heatercooler.reset()
@@ -198,7 +222,7 @@ lines"""
         self.thread_handler.start_thread("PHcontroler",
                                          self.phcontrol.start)
         self.thread_handler.start_thread("reactor",
-                                         self.reactor.start)        
+                                         self.reactor.start)
         self.thread_handler.start_thread("window",
                                          self.start_drawing)
         
