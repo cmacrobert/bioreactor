@@ -6,7 +6,6 @@ Created on Wed Mar 10 17:53:02 2021
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 
 class reactor():
@@ -27,8 +26,8 @@ class reactor():
         self.P = ph
         self.T = temperature
         
-    def say(self): 
-        print("Reactor - Temperature is " + str(self.temperature) + " degrees..." ) 
+    def get_running(self):
+        return self.running
  #_________________________________________________    
     def get_temperature(self): 
         print('Reactor - Getting temperature') 
@@ -60,11 +59,10 @@ class reactor():
 #___________________________________________________________________    
     def reset_temperature(self): 
         print('Reactor - Resetting temperature') 
-        self.temperature = self.initialtemperature 
-        self.say()
-     
+        self.temperature = self.initialtemperature     
     
-    def reactor_heating_cycle(self, T):
+    def reactor_heating_cycle(self):
+        T = self.T
         
         L = 0.21  # radius of sphere in m
         n = 10  # number of divisions
@@ -80,11 +78,9 @@ class reactor():
         # but i want each to be taken from the last iteration
         dTdt = np.empty(n)  # define empty vector
 
-
         t = np.arange(0, t_final, dt)
     
         for j in range(1, len(t)):  # looping for all elements in t
-            plt.clf()  # clears for every for loop
             for i in range(1, n - 1):  # defines value of derivative for each spatial node
                 dTdt[i] = alpha * (
                     -(T[i] - T[i - 1]) / dx ** 2 + (T[i + 1] - T[i]) / dx ** 2
@@ -101,21 +97,11 @@ class reactor():
             # plt.ylabel("Temperature (C)")
             # plt.show()
             # plt.pause(0.05)
-    
+            
         # need to preserve Ts between cycles
-        return T
-        #the above is plot information, can be somewhat removed, though use discretion
-   
-        
-    def start(self):
-       self.running = True
-       
-       while self.running: 
-           self.T = self.reactor_heating_cycle(self.T) #function belongs to the reactor
-           self.temperature = self.T[7]
-       
+        self.T = T
+        self.temperature = T[7]
 
- 
 #_____________________________________________________________________________
 #PH SIMULATION - initally a clone of the temp simulation... 
 #could i make this into am inheritable class
@@ -123,11 +109,10 @@ class reactor():
 
     def reset_ph(self): 
         print('Reactor - Resetting ph') 
-        self.ph = self.initialph 
-        self.say()
-     
+        self.ph = self.initialph     
     
-    def reactor_ph_cycle(self, P):
+    def reactor_ph_cycle(self):
+        P = self.P
         
         L = 0.21  # radius of sphere in m
         n = 10  # number of divisions
@@ -142,12 +127,10 @@ class reactor():
         P = np.ones(n) * P0  # start ph vector
         # but i want each to be taken from the last iteration
         dPdt = np.empty(n)  # define empty vector
-
         
         t = np.arange(0, t_final, dt)
-    
+        
         for j in range(1, len(t)):  # looping for all elements in t
-            plt.clf()  # clears for every for loop
             for i in range(1, n - 1):  # defines value of derivative for each spatial node
                 dPdt[i] = alpha * (
                     -(P[i] - P[i - 1]) / dx ** 2 + (P[i + 1] - P[i]) / dx ** 2
@@ -165,18 +148,18 @@ class reactor():
             # plt.ylabel("pH")
             # plt.show()
             # plt.pause(0.05)
-    
+                
         # need to preserve Ps between cycles
-        return P
-        #the above is plot information, can be somewhat removed, though use discretion
-   
+        self.P = P
+        self.ph = P[7]   
         
     def start(self):
         self.running = True
        
-        while self.running: 
-           self.P = self.reactor_ph_cycle(self.P) #function belongs to the reactor
-           self.ph = self.P[7]
+        while (self.running == True):
+            time.sleep(1)
+            self.reactor_heating_cycle()                        
+            self.reactor_ph_cycle()
            
     def stop(self):
         print(self.name + ": Stopping thread")
