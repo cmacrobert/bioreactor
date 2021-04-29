@@ -10,11 +10,15 @@ Created on Sun Apr 25 19:03:39 2021
 
 
 from effectors.base import EffectorBase
+from sensors.phsensor import phsensor
 
 class phcontrol(EffectorBase):
    
     def __init__(self):         
         EffectorBase.__init__(self, "pHController")                                             
+        self.intUpperDomain = 200
+        self.intLowerDomain = -200
+        self.reset_vars()
         
     def set_target_ph(self, ph):                  # Get user's target temp
         self.set_setpoint(ph)
