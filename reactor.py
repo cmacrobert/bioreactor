@@ -67,15 +67,13 @@ class reactor():
         L = 0.21  # radius of sphere in m
         n = 10  # number of divisions
         T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
-        # T1s = 27  # peltier temperature needs to be integrated as this value
-        T2s = 15  # external temperature
         dx = L / n
         alpha = 0.00143
         t_final = 1  # time interval lasts one second
         dt = 0.1  # this is the time step
         x = np.linspace(dx / 2, L - dx / 2, n)
         T = np.ones(n) * T0  # start temperature vector
-        # but i want each to be taken from the last iteration
+        # each to be taken from the last iteration
         dTdt = np.empty(n)  # define empty vector
 
         t = np.arange(0, t_final, dt)
@@ -88,7 +86,7 @@ class reactor():
             dTdt[0] = alpha * (
                 -(T[0] - self.peltier_temp) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
             )  # generic for inner nodes
-            # dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
+            dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(self.peltier_temp-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
             # plt.figure(1) 
             # plt.plot(x, T)
@@ -100,7 +98,7 @@ class reactor():
             
         # need to preserve Ts between cycles
         self.T = T
-        self.temperature = T[7]
+        self.temperature = T[5]
 
 #_____________________________________________________________________________
 #PH SIMULATION - initally a clone of the temp simulation... 
@@ -117,15 +115,13 @@ class reactor():
         L = 0.21  # radius of sphere in m
         n = 10  # number of divisions
         P0 = 7  # assumes start reacotr temp is 7, tho needs to be taken from last time interval
-        # P1s = 27  # input to reactor ph needs to be integrated as this value
-        P2s = 4  # external ph, or the ph the system tends towards, i assumed it becomes acidic
         dx = L / n
         alpha = 0.00143
         t_final = 1  # time interval lasts one second
         dt = 0.1  # this is the time step
         x = np.linspace(dx / 2, L - dx / 2, n)
         P = np.ones(n) * P0  # start ph vector
-        # but i want each to be taken from the last iteration
+        # each to be taken from the last iteration
         dPdt = np.empty(n)  # define empty vector
         
         t = np.arange(0, t_final, dt)
@@ -138,7 +134,7 @@ class reactor():
             dPdt[0] = alpha * (
                 -(P[0] - self.ph_into_reactor) / dx ** 2 + (P[0 + 1] - P[0]) / dx ** 2
             )  # generic for inner nodes
-            # dPdt[n-1] = alpha*(-(P[n-1]-P[n-1-1])/dx**2+(P2s-P[n-1])/dx**2) #the n-1 node
+            dPdt[n-1] = alpha*(-(P[n-1]-P[n-1-1])/dx**2+(self.ph_into_reactor-P[n-1])/dx**2) #the n-1 node
            
             P = P + dPdt * dt  # continuously update ph vector, gets overwritten each time
             # plt.figure(1) 
@@ -151,7 +147,7 @@ class reactor():
                 
         # need to preserve Ps between cycles
         self.P = P
-        self.ph = P[7]   
+        self.ph = P[5]   
         
     def start(self):
         self.running = True
