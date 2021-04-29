@@ -45,13 +45,9 @@ class Main():
         print("Main - Starting drawing")
         self.m = tk.Tk(className='Bioreactor Simulator')
         self.m.title("Bioreactor Simulator")
-        self.m.geometry("800x800")
+        self.m.geometry("800x600")
         self.m['background']='white'
-        
-        ''' Canvas, used for drawing manually '''
-        canvas = tk.Canvas(self.m, width=800, height=600)
-        canvas.pack()
-        
+                
         ''' Menu '''
         self.menu = tk.Menu(self.m)
         self.m.config(menu=self.menu)
@@ -65,21 +61,35 @@ class Main():
         self.helpmenu = tk.Menu(self.menu)
         self.menu.add_cascade(label='Help', menu=self.helpmenu)
         self.helpmenu.add_command(label='About', command=self.show_about)
+            
+               
+        ''' Canvas, used for drawing manually '''
+        canvas = tk.Canvas(self.m, width=800, height=600)
+        canvas.pack(side=tk.LEFT)
         
-        ''' Buttons '''
-        btn_setpoint = tk.Button(self.m, text='Set Setpoint', width=25, 
-                             command=self.set_setpoint)
-        btn_setpoint.pack()
-                
         ''' Matplotlib plot '''        
         figure = plt.figure(figsize=(6,5), dpi=100)
         self.ax = figure.add_subplot(111)
         self.plot_canvas = FigureCanvasTkAgg(figure, master=canvas)#self.m)
         self.plot_canvas.get_tk_widget().pack()
         
-        ''' Radio buttons and label '''
-        frame_plot_select = tk.Frame(self.m, width=200, height=200)
-        frame_plot_select.pack()        
+        
+        '''Controls frame '''
+        frame_controls = tk.Frame(self.m, width=200, height=200)
+        frame_controls.pack(side=tk.RIGHT)
+        
+        ''' Setpoint control '''
+        frame_setpoint = tk.Frame(frame_controls, width=200, height=200)
+        frame_setpoint.pack(pady=20)
+        btn_setpoint = tk.Button(frame_setpoint, text='Set Setpoint', width=25, 
+                             command=self.set_setpoint)
+        btn_setpoint.pack()
+        self.spinbox = spinbox=tk.Spinbox(frame_setpoint)
+        spinbox.pack()
+        
+        ''' Effector selection '''
+        frame_plot_select = tk.Frame(frame_controls, width=200, height=200)
+        frame_plot_select.pack(pady=20)        
         label_plot_select = tk.Label(frame_plot_select, text="Plot Shown:", justify=tk.LEFT)
         label_plot_select.pack()
         self.selected_plot = tk.IntVar(self.m)
@@ -92,13 +102,9 @@ class Main():
                                    command=self.change_plot_source)
         radbtn_ph.pack()
         
-        ''' Spinbox for setting setpoint '''
-        self.spinbox = spinbox=tk.Spinbox(self.m)
-        spinbox.pack()
-        
         ''' Labels for current values'''     
-        frame_labels = tk.Frame(self.m, width=200, height=200)
-        frame_labels.pack()
+        frame_labels = tk.Frame(frame_controls, width=200, height=200)
+        frame_labels.pack(pady=20)
         
         frame_label_temp = tk.Frame(frame_labels, width=200, height=100)
         frame_label_temp.pack()
@@ -113,6 +119,7 @@ class Main():
         label_ph.pack(side=tk.LEFT)
         self.label_ph = tk.Label(frame_label_ph, text="0", justify=tk.LEFT)
         self.label_ph.pack(side=tk.RIGHT)
+    
     
         ''' Call the gui_update function once, after set time has passed '''
         self.window_update = self.m.after(self.update_delay, 

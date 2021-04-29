@@ -26,4 +26,4 @@ class ThreadHandler():
             if t is main_thread:
                 continue
             print("ThreadHandler: Joining thread " + t.getName())
-            t.join(5)
+            t.join(2)

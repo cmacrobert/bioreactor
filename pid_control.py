@@ -17,7 +17,7 @@ class PIDControl():
         self.current_value = 0
         self.x = 0
         self.y = 0
-        self.intUpperRange = 1
+        self.intUpperRange = 50
         self.intLowerRange = 0
         self.intUpperDomain = 55
         self.intLowerDomain = 0
@@ -58,7 +58,7 @@ class PIDControl():
         self.current_value = self.start_value
         self.e_prev = 0
         self.e = 0
-        self.time_rate = 0.001
+        self.time_rate = 0.1
         self.t_prev = 0
         self.t = 1
         self.t_counter = 0
