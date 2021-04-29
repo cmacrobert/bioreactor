@@ -9,7 +9,6 @@ import time
 from inputs.input_returns import InputReturns as IR
 import inputs.input_handler as IH
 import effectors.heatercooler as HC
-import sys
 import reactor
 
 class Main():
@@ -71,9 +70,7 @@ class Main():
         self.phsensor.set_sensor_value(self.reactor.get_ph()) 
         self.phcontrol.set_current_value(self.phsensor.get_sensor_value())
         self.reactor.set_ph(self.phcontrol.get_current_value())
-        
-        
-        
+    
     def main(self):
         """
         Main loop starts threads for input handler and effectors

@@ -34,8 +34,7 @@ class PIDControl():
         self.current_value = new_current_value
         
     def get_current_value(self):
-        return self.current_value
-    
+        return self.current_value    
         
     def reset(self):    
         print("PIDControl: Restarting")    
