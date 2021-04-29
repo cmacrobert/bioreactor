@@ -16,20 +16,22 @@ class phcontrol(EffectorBase):
    
     def __init__(self):         
         EffectorBase.__init__(self, "pHController")                                             
-        self.intUpperDomain = 200
-        self.intLowerDomain = -200
+        self.intUpperDomain = 14
+        self.intLowerDomain = 0
         self.reset_vars()
+        self.title = "pH"
+        self.y_axis_label = "pH"
+        self.setpoint = 7        
         
     def set_target_ph(self, ph):                  # Get user's target temp
-        self.set_setpoint(ph)
-    
+        self.set_setpoint(ph)    
 
     def start(self):
         print("HeaterCooler: Starting")
         self.reset_scheduled = True        
         self.running = True
         
-        while self.running:            
+        while self.running:
             self.update_pid()
         print("HeaterCooler: Exited loop")
  
