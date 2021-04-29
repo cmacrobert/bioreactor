@@ -8,6 +8,8 @@ import thread_handler
 import time
 import effectors.heatercooler as HC
 import effectors.phcontrol as PH
+import sensors.thermocouple as TC
+import sensors.phsensor as PS
 import reactor
 import tkinter as tk
 import matplotlib.pyplot as plt
@@ -19,7 +21,9 @@ class Main():
         self.thread_handler = thread_handler.ThreadHandler()
         self.heatercooler = HC.heatercooler()
         self.phcontrol = PH.phcontrol()
-        self.reactor = reactor.reactor()
+        self.reactor = reactor.reactor()        
+        self.thermocouple = TC.thermocouple()
+        self.phsensor = PS.phsensor()        
         self.running = False
         self.shutting_down = False
         self.update_delay = 250
@@ -123,7 +127,7 @@ class Main():
     
         ''' Call the gui_update function once, after set time has passed '''
         self.window_update = self.m.after(self.update_delay, 
-                                          self.gui_update)
+                                          self.update_gui)
     
         ''' Set up window functions '''
         self.m.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -137,8 +141,6 @@ class Main():
         
     def on_closing(self):
         #TODO: clear display and replace with "shutting down" message
-        #TODO: reimplement confirmation box, without breaking threading
-        #if messagebox.askokcancel("Quit", "Do you want to quit?"):
         self.shut_down()
         
     def show_about(self):
@@ -190,7 +192,11 @@ lines"""
         self.ax.set_xlabel("Time (s)")
         self.plot_canvas.draw_idle()
         
-    def gui_update(self):
+    def on_reset(self):
+        self.heatercooler.reset()
+        self.phcontrol.reset()
+        
+    def update_gui(self):
         ''' Update GUI, refreshing plots '''
         self.draw_plot()
         
@@ -199,22 +205,16 @@ lines"""
         
         ''' Schedule update function again'''
         self.window_update = self.m.after(self.update_delay,
-                                          self.gui_update)
-        
-    def on_reset(self):
-        print("Main - Button was pressed")
-        #print("Main - Text entry contents = " + str(self.txtentry.get()))
-        self.heatercooler.reset()
-        self.phcontrol.reset()
+                                          self.update_gui)
     
-    def updater(self):     #grabs values from reactor, passes them to places. 
+    def update_reactor(self):     #grabs values from reactor, passes them to places. 
         self.thermocouple.set_sensor_value(self.reactor.get_temperature())
-        self.heatercooler.set_current_value(self.thermocouple.get_sensor_value())
+        #self.heatercooler.set_current_value(self.thermocouple.get_sensor_value())
         self.reactor.set_peltier_temp(self.heatercooler.get_current_value())
 
         self.phsensor.set_sensor_value(self.reactor.get_ph()) 
-        self.phcontrol.set_current_value(self.phsensor.get_sensor_value())
-        self.reactor.set_ph(self.phcontrol.get_current_value())
+        #self.phcontrol.set_current_value(self.phsensor.get_sensor_value())
+        self.reactor.set_ph_input(self.phcontrol.get_current_value())
     
     def main(self):
         '''
@@ -237,6 +237,7 @@ lines"""
         while (self.running == True):
             time.sleep(1)   # Delay when polling, mainly for debugging
             #TODO: call main update function here
+            self.update_reactor()
                     
         self.shutting_down = True
         while (self.shutting_down == True):
