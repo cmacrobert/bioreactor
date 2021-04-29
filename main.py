@@ -67,10 +67,8 @@ class Main():
         self.thermocouple.set_sensor_value(self.reactor.get_temperature())
         self.heatercooler.set_current_value(self.thermocouple.get_sensor_value())
         self.reactor.set_peltier_temp(self.heatercooler.get_current_value())
-        
-        #check the below please!
-        #structure for the pH control, following the new format. 
-        self.phsensor.set_sensor_value(self.reactor.get_ph()) #get_ph doesnt exsist yet 
+
+        self.phsensor.set_sensor_value(self.reactor.get_ph()) 
         self.phcontrol.set_current_value(self.phsensor.get_sensor_value())
         self.reactor.set_ph(self.phcontrol.get_current_value())
         

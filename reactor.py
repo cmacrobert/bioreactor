@@ -49,14 +49,14 @@ class reactor():
     
 #___________________________________________________________________
     #MIRRIN
+    
+    #def get_pressure(pressure):
+     #   pass
+ 
     def set_pressure_input(self, pressure):
         self.set_pressureinput = pressure
         #not yet used by reactor
         pass
-    
-    #def get(p):
-     #   pass
-    
 #___________________________________________________________________    
     def reset_temperature(self): 
         print('Reactor - Resetting temperature') 
