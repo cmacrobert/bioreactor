@@ -8,18 +8,19 @@ Created on Mon Apr 26 13:56:59 2021
 from sensors.base import SensorBase 
 class SensorCo2(SensorBase): 
  
-    def __init__(self, label, sensor): 
+    def __init__(self, label): 
         super().__init__() 
-        self.label = 'CO2 content'   
-        self.sensor = sensor 
+        self.label = 'co2 content'   
+      #  self.sensor = sensor 
          
-    def get_co2(self): 
-        if self.reactor.running:
-            self.set_sensor_value(self.sensor.getco2()) 
-        return super().get_sensor_value() 
+    #def get_o2(self): 
+   #     if self.reactor.running:
+     #       self.set_sensor_value(self.sensor.getco2()) 
+     #   return super().get_sensor_value() 
          
+     #test code
 if __name__ == '__main__': 
-    co2 = SensorCo2("CO2",0) 
+    co2 = SensorCo2("co2",0) 
     print(co2.get_sensor_value()) 
     co2.set_sensor_value(50) 
     print(co2.get_sensor_value()) 

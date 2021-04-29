@@ -11,17 +11,17 @@ from effectors.base import EffectorBase
 class EffectorCo2(EffectorBase):  #inherits class
     
     def __init__(self):     
-        EffectorBase.__init__(self, "CO2 Sensor")
+        EffectorBase.__init__(self, "co2 Sensor")
         
-    def set_target_co2(self, CO2):    # receive target CO2 value
-        self.set_setpoint(CO2)
+    def set_target_co2(self, co2):    # receive target CO2 value
+        self.set_setpoint(co2)
     
  
     def start(self):
-        print("CO2 Sensor: Starting")
+        print("co2 Sensor: Starting")
         self.reset_scheduled = True        
         self.running = True
         
         while self.running:            
             self.update_pid()
-        print("CO2 Sensor: Exited loop")
+        print("co2 Sensor: Exited loop")
