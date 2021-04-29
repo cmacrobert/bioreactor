@@ -18,6 +18,11 @@ class PIDControl():
         self.current_value = 0
         self.x = 0
         self.y = 0
+        self.intUpperRange = 1
+        self.intLowerRange = 0
+        self.intUpperDomain = 55
+        self.intLowerDomain = 0
+        self.rangeDiff = self.intUpperRange-self.intLowerRange
 
     def get_setpoint(self):
         return self.setpoint
@@ -51,6 +56,12 @@ class PIDControl():
         self.time_rate = 0.001
         self.t_prev = 0
         self.t = 1
+        self.t_counter = 0
+        self.upperRange = self.intUpperRange
+        self.lowerRange = self.intLowerRange
+        self.upperDomain = self.intUpperDomain
+        self.lowerDomain = self.intLowerDomain
+        self.rangeDiff = self.upperRange-self.lowerRange
         self.I = 0
         self.Kp = 0.9
         self.Ki = 0.1
@@ -72,7 +83,8 @@ class PIDControl():
         """ Update stored data for next iteration"""
         self.e_prev = self.e
         self.t_prev = self.t 
-        self.t = (self.t+1)                
+        self.t = (self.t+1)   
+        self.t_counter = (self.t_counter+1)          
                     
         self.x.append(self.t*self.time_rate)
         self.y.append(self.current_value)
