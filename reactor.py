@@ -66,7 +66,7 @@ class reactor():
     def set_pressure_input(self, pressure):
         self.set_pressureinput = pressure
 #___________________________________________________________________
-def get_co2(self):
+    def get_co2(self):
         print('Reactor - Getting co2')
         return self.co2
  
@@ -166,7 +166,7 @@ def get_co2(self):
         self.ph = P[5]   
         
         ###########################################
-        def reset_pressure(self): 
+    def reset_pressure(self): 
         print('Reactor - Resetting pressure') 
         self.pressure = self.initialpressure     
     
