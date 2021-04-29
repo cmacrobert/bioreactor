@@ -40,11 +40,11 @@ class reactor():
     def get_ph(self): 
         print('Reactor - Getting ph') 
         return self.ph 
-        pass
+        
     
     def set_ph_input(self, phinput):
         self.ph_into_reactor = phinput #hhmmm
-        pass
+    
     
 #___________________________________________________________________
     #MIRRIN
