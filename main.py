@@ -7,20 +7,24 @@ Created on Mon Mar 22 15:59:25 2021
 import thread_handler
 import time
 import effectors.heatercooler as HC
+import effectors.phcontrol as PH
 import reactor
 import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+effectorNumb = 2
 
 class Main():
     
     def __init__(self):
         self.thread_handler = thread_handler.ThreadHandler()
         self.heatercooler = HC.heatercooler()
+        self.phcontrol = PH.phcontrol()
         self.reactor = reactor.reactor()
         self.running = False
         self.shutting_down = False
-        self.update_delay = 500
+        self.update_delay = 1
         
     def shut_down(self):
         """
@@ -31,6 +35,7 @@ class Main():
         self.m.after_cancel(self.window_update)
         self.window_update = None
         self.heatercooler.stop()
+        self.phcontrol.stop()
         self.reactor.stop()        
         self.thread_handler.stop_threads()
         self.running = False
@@ -108,14 +113,53 @@ lines"""
     def draw_plot(self):
         ''' Draw plot on canvas after getting latest x and y values'''
         #TODO: make this more generic, not just for heatercooler
-        x = self.heatercooler.get_x()
+        if effectorNumb == 1:
+            effector = self.heatercooler
+        else:
+            effector = self.phcontrol
+        
+        """x = self.heatercooler.get_x()
         y = self.heatercooler.get_y()
+        setpoint = self.heatercooler.get_setpoint()
+        
+        lowerRange = self.heatercooler.lowerRange
+        upperRange = self.heatercooler.upperRange
+        
+        lowerDomain = self.heatercooler.lowerDomain
+        upperDomain = self.heatercooler.upperDomain
         
         self.ax.clear()
         self.ax.plot(x,y)
-        self.ax.hlines(self.heatercooler.get_setpoint(), 0, 5, 'C1', 'dashed')
-        plt.xlim(0,1)
-        plt.ylim(0,55)
+        self.ax.hlines(setpoint,lowerRange,upperRange, 'C1', 'dashed')
+        if self.heatercooler.t_counter >= (upperRange/self.heatercooler.time_rate):
+            self.heatercooler.lowerRange = self.heatercooler.upperRange
+            self.heatercooler.upperRange += self.heatercooler.rangeDiff
+            self.heatercooler.t_counter = 0
+            print("restarting t counter")
+        plt.xlim(lowerRange,upperRange)
+        plt.ylim(lowerDomain,upperDomain)
+        self.plot_canvas.draw_idle()"""
+        
+        x = effector.get_x()
+        y = effector.get_y()
+        setpoint = effector.get_setpoint()
+        
+        lowerRange = effector.lowerRange
+        upperRange = effector.upperRange
+        
+        lowerDomain = effector.lowerDomain
+        upperDomain = effector.upperDomain
+        
+        self.ax.clear()
+        self.ax.plot(x,y)
+        self.ax.hlines(setpoint,lowerRange,upperRange, 'C1', 'dashed')
+        if effector.t_counter >= (effector.rangeDiff/effector.time_rate):
+            effector.lowerRange = effector.upperRange
+            effector.upperRange += effector.rangeDiff
+            effector.t_counter = 0
+            print("restarting t counter")
+        plt.xlim(lowerRange,upperRange)
+        plt.ylim(lowerDomain,upperDomain)
         self.plot_canvas.draw_idle()
         
     def gui_update(self):
@@ -130,6 +174,7 @@ lines"""
         print("Main - Button was pressed")
         #print("Main - Text entry contents = " + str(self.txtentry.get()))
         self.heatercooler.reset()
+        self.phcontrol.reset()
     
     def updater(self):     #grabs values from reactor, passes them to places. 
         self.thermocouple.set_sensor_value(self.reactor.get_temperature())
@@ -150,10 +195,13 @@ lines"""
         
         self.thread_handler.start_thread("heatercooler",
                                          self.heatercooler.start)
+        self.thread_handler.start_thread("PHcontroler",
+                                         self.phcontrol.start)
         self.thread_handler.start_thread("reactor",
                                          self.reactor.start)        
         self.thread_handler.start_thread("window",
                                          self.start_drawing)
+        
         
         while (self.running == True):
             time.sleep(1)   # Delay when polling, mainly for debugging
@@ -161,8 +209,9 @@ lines"""
                     
         self.shutting_down = True
         while (self.shutting_down == True):
-            """ Check all other threaded processes have stopped"""
+            ''' Check all other threaded processes have stopped '''
             if (self.heatercooler.get_running() == False and
+                self.phcontrol.get_running() == False and
                 self.reactor.get_running() == False):            
                 self.shutting_down = False
         print("Main - Shutdown complete")
