@@ -270,7 +270,7 @@ lines"""
     def update_reactor(self):
         ''' Grabs values from reactor, passes them to places '''
         self.thermocouple.set_sensor_value(self.reactor.get_temperature())
-        #self.temperature_control.set_current_value(self.thermocouple.get_sensor_value())
+        self.temperature_control.set_current_value(self.thermocouple.get_sensor_value())
         self.reactor.set_peltier_temp(self.temperature_control.get_current_value())
 
         self.phsensor.set_sensor_value(self.reactor.get_ph()) 
@@ -285,6 +285,9 @@ lines"""
         #self.co2_control.set_current_value(self.co2_sensor.get_sensor_value())
         self.reactor.set_co2_input(self.co2_control.get_current_value())
     
+    #def update microcontoller:
+        
+        
     def main(self):
         '''
         Main loop starts threads for window and effectors

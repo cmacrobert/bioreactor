@@ -6,25 +6,27 @@ Created on Wed Mar 10 17:53:02 2021
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import time
 
 class reactor():
      
-    def __init__ (self, temperature=15, ph=7, pressure=1, co2=5): 
-        #self.name = name #argument name is passed thorugh init statement
+    def __init__ (self, temperature=35, ph=7, pressure=1, co2=5): #name was delected, not reffered to
+        #self.name = name #argument name is passed thorugh init statement)
+        self.n = 10
         self.temperature = temperature 
-        self.initialtemperature = temperature 
-        self.peltier_temp = temperature #well, its an input, its not the reactor temperature
-        self.running = False
-
-        #i guess it needs more inits
+        self.initialtemperature = 15
+        self.T = np.ones(self.n) * temperature  # start temperature vector
+        self.peltier_temp = 0
+        self.dTdt = np.empty(self.n)
+        
+                #i guess it needs more inits
         self.ph = ph
         self.initialph = ph
         self.ph_into_reactor = ph #i hope so
         #self.running = False
         self.name = "Reactor"
         self.P = ph
-        self.T = temperature
         
         self.pressure = pressure
         self.set_pressureinput = pressure
@@ -36,17 +38,7 @@ class reactor():
         self.initialco2 = co2
         self.C = co2
         
-    def get_running(self):
-        return self.running
- #_________________________________________________    
-    def get_temperature(self): 
-        print('Reactor - Getting temperature') 
-        return self.temperature 
-
-    def set_peltier_temp(self, temp):
-        self.peltier_temp = temp
-        
-#___________________________________________________________________        
+        #___________________________________________________________________        
     def get_ph(self): 
         print('Reactor - Getting ph') 
         return self.ph 
@@ -72,49 +64,78 @@ class reactor():
  
     def set_co2_input(self, co2):
         self.set_co2input = co2
-#___________________________________________________________________    
+# ___________________________________________________________________    
+
+        
+        
+    def say(self): 
+        print("Reactor - Temperature is " + str(self.temperature) + " degrees..." ) 
+     
+    def get_temperature(self): 
+        print('Reactor - Getting temperature') 
+        return self.temperature 
+    
+    def set_peltier_temp(self, temp):
+        self.peltier_temp = temp
+        
+ 
+    # def set_temperature(self, value): 
+    #     print('Reactor - Setting temperature to ' + value) 
+    #     self.temperature = value 
+     
+    
     def reset_temperature(self): 
         print('Reactor - Resetting temperature') 
-        self.temperature = self.initialtemperature     
+        self.temperature = self.initialtemperature 
+        self.say()
+     
     
     def reactor_heating_cycle(self):
+        n = self.n
         T = self.T
-        
         L = 0.21  # radius of sphere in m
-        n = 10  # number of divisions
-        T0 = 15  # assumes start room temp but, water temperature need to be taken from last time interval
+        # n = 10  # number of divisions
+        T1s = self.peltier_temp  # peltier temperature #needs to be setpoint{}{}{}{}{}
+        T2s = T1s  # external temperature
         dx = L / n
         alpha = 0.00143
         t_final = 1  # time interval lasts one second
         dt = 0.1  # this is the time step
         x = np.linspace(dx / 2, L - dx / 2, n)
-        T = np.ones(n) * T0  # start temperature vector
-        # each to be taken from the last iteration
-        dTdt = np.empty(n)  # define empty vector
+        
 
+        # but i want each to be taken from the last iteration
+        dTdt = self.dTdt  # define empty vector
         t = np.arange(0, t_final, dt)
     
         for j in range(1, len(t)):  # looping for all elements in t
+            # plt.clf()  # clears for every for loop
             for i in range(1, n - 1):  # defines value of derivative for each spatial node
                 dTdt[i] = alpha * (
                     -(T[i] - T[i - 1]) / dx ** 2 + (T[i + 1] - T[i]) / dx ** 2
                 )  # end nodes have boundary condition, left side
             dTdt[0] = alpha * (
-                -(T[0] - self.peltier_temp) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
+                -(T[0] - T1s) / dx ** 2 + (T[0 + 1] - T[0]) / dx ** 2
             )  # generic for inner nodes
-            dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(self.peltier_temp*0.8-T[n-1])/dx**2) #the n-1 node
+            dTdt[n-1] = alpha*(-(T[n-1]-T[n-1-1])/dx**2+(T2s-T[n-1])/dx**2) #the n-1 node
             T = T + dTdt * dt  # continuously update temp vector, gets overwritten each time
-            # plt.figure(1) 
+            # plt.figure(1)  # for each cycle i want node T9 to become the reactor temperature
             # plt.plot(x, T)
             # plt.axis([0, L, 10, 35])
             # plt.xlabel("Distance (m)")
             # plt.ylabel("Temperature (C)")
             # plt.show()
             # plt.pause(0.05)
-            
-        # need to preserve Ts between cycles
-        self.T = T
-        self.temperature = T[5]
+            self.T = T
+            self.dTdt = dTdt
+            self.temperature = T[5]
+    
+     
+    def start(self):
+        self.running = True
+    
+    def stop(self):
+        self.running = False
 
 #_____________________________________________________________________________
 #PH SIMULATION - initally a clone of the temp simulation... 
