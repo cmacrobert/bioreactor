@@ -8,27 +8,23 @@ Created on Tue Apr 27 16:37:04 2021
 #example of the Peltier Module
 #https://www.cuidevices.com/product/resource/cp18-m.pdf
 
-
 from effectors.base import EffectorBase
 
-class heatercooler(EffectorBase):  
+class TemperatureControl(EffectorBase):  
     
     def __init__(self):      
-        EffectorBase.__init__(self, "HeaterCooler")
+        EffectorBase.__init__(self, "TemperatureControl")
+        self.intUpperDomain = 55
+        self.intLowerDomain = 0
         self.title = "Temperature"
         self.y_axis_label = "Temperature (\xb0C)"
         self.setpoint = 37
-         
-    def set_target_temp(self, temp):  # Get user's target temp
-        self.set_setpoint(temp)
-        
 
     def start(self):
-        print("HeaterCooler: Starting")
+        print("TemperatureControl: Starting")
         self.reset_scheduled = True        
         self.running = True
         
         while self.running:
             self.update_pid()
-        print("HeaterCooler: Exited loop")
- 
+        print("TemperatureControl: Exited loop")
