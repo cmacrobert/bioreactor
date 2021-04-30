@@ -11,8 +11,8 @@ class PHControl(EffectorBase):
    
     def __init__(self):         
         EffectorBase.__init__(self, "pHController")                                             
-        self.intUpperRange = 14
-        self.intLowerRange = 0
+        self.initial_upper_range = 14
+        self.initial_lower_range = 0
         self.title = "pH"
         self.y_axis_label = "pH"
         self.setpoint = 7 

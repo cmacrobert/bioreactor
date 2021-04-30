@@ -186,12 +186,12 @@ lines"""
             self.should_update_setpoint = False
         
         setpoint = effector.get_setpoint()        
-        lowerRange = effector.lowerRange
-        upperRange = effector.upperRange        
-        lowerDomain = effector.lowerDomain
-        upperDomain = effector.upperDomain
+        lower_range = effector.lower_range
+        upper_range = effector.upper_range        
+        lower_domain = effector.lower_domain
+        upper_domain = effector.upper_domain
         
-        self.spbx_setpoint.config(from_=lowerRange, to=upperRange)
+        self.spbx_setpoint.config(from_=lower_range, to=upper_range)
         if(self.should_update_spinbox == True):
             self.spbx_setpoint.delete(0, 'end')
             self.spbx_setpoint.insert(0, setpoint)
@@ -199,10 +199,10 @@ lines"""
         
         self.ax.clear()
         self.ax.plot(effector.get_x(),effector.get_y())
-        self.ax.hlines(setpoint, lowerDomain, upperDomain, 'C1', 'dashed')
+        self.ax.hlines(setpoint, lower_domain, upper_domain, 'C1', 'dashed')
         
-        plt.xlim(lowerDomain,upperDomain)
-        plt.ylim(lowerRange,upperRange)
+        plt.xlim(lower_domain, upper_domain)
+        plt.ylim(lower_range, upper_range)
         self.ax.set_title(effector.get_title())
         self.ax.set_ylabel(effector.get_y_label())
         self.ax.set_xlabel("Time (s)")

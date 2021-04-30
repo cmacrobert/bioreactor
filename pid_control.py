@@ -17,11 +17,11 @@ class PIDControl():
         self.current_value = 0
         self.x = 0
         self.y = 0
-        self.intUpperRange = 55
-        self.intLowerRange = 0
-        self.intUpperDomain = 50
-        self.intLowerDomain = 0
-        self.domainDiff = self.intUpperDomain-self.intLowerDomain
+        self.initial_upper_range = 55
+        self.initial_lower_range = 0
+        self.initial_upper_domain = 50
+        self.initial_lower_domain = 0
+        self.domain_diff = self.initial_upper_domain-self.initial_lower_domain
 
     def get_setpoint(self):
         return self.setpoint
@@ -62,11 +62,11 @@ class PIDControl():
         self.t_prev = 0
         self.t = 1
         self.t_counter = 0
-        self.upperRange = self.intUpperRange
-        self.lowerRange = self.intLowerRange
-        self.upperDomain = self.intUpperDomain
-        self.lowerDomain = self.intLowerDomain
-        self.domainDiff = self.upperDomain-self.lowerDomain
+        self.upper_range = self.initial_upper_range
+        self.lower_range = self.initial_lower_range
+        self.upper_domain = self.initial_upper_domain
+        self.lower_domain = self.initial_lower_domain
+        self.domain_diff = self.upper_domain-self.lower_domain
         self.I = 0
         self.Kp = 0.9
         self.Ki = 0.1
@@ -91,13 +91,10 @@ class PIDControl():
         self.t = (self.t+1)   
         self.t_counter = (self.t_counter+1)  
         
-        if self.t_counter >= (self.domainDiff/self.time_rate):
-            print("t_counter = " + str(self.t_counter))
-            print("domainDiff=" + str(self.domainDiff) + ", time rate=" + str(self.time_rate))
-            self.lowerDomain = self.upperDomain
-            self.upperDomain += self.domainDiff
+        if self.t_counter >= (self.domain_diff/self.time_rate):
+            self.lower_domain = self.upper_domain
+            self.upper_domain += self.domain_diff
             self.t_counter = 0
-            print("restarting t counter")
                     
         self.x.append(self.t*self.time_rate)
         self.y.append(self.current_value)
