@@ -97,12 +97,14 @@ class Main():
         ''' Setpoint control '''
         frame_setpoint = tk.Frame(frame_controls,
                                   width=200, height=200)
-        frame_setpoint.pack(pady=20)
-        btn_setpoint = tk.Button(frame_setpoint, text='Set Setpoint',
-                                 width=25, command=self.on_setpoint_changed)
-        btn_setpoint.pack()
+        frame_setpoint.pack(pady=20)    
+        lbl_setpoint = tk.Label(frame_setpoint, text="Setpoint:")
+        lbl_setpoint.pack()
         self.spbx_setpoint = tk.Spinbox(frame_setpoint)
-        self.spbx_setpoint.pack()   
+        self.spbx_setpoint.pack(side=tk.LEFT)
+        btn_setpoint = tk.Button(frame_setpoint, text='Update',
+                                 command=self.on_setpoint_changed)
+        btn_setpoint.pack(side=tk.RIGHT)
         
         ''' Effector selection '''
         frame_plot_select = tk.Frame(frame_controls,
@@ -115,22 +117,22 @@ class Main():
         radbtn_temp = tk.Radiobutton(frame_plot_select, text="Temperature",
                                      variable=self.selected_plot, value=0,
                                      command=self.on_plot_source_changed,
-                                     indicatoron=0)
+                                     width=100, indicatoron=0)
         radbtn_temp.pack()
         radbtn_ph = tk.Radiobutton(frame_plot_select, text="pH",
                                    variable=self.selected_plot, value=1,
                                    command=self.on_plot_source_changed,
-                                   indicatoron=0)
+                                   width=100, indicatoron=0)
         radbtn_ph.pack()
-        radbtn_pressure = tk.Radiobutton(frame_plot_select, text="pressure",
+        radbtn_pressure = tk.Radiobutton(frame_plot_select, text="Pressure",
                                    variable=self.selected_plot, value=2,
                                    command=self.on_plot_source_changed,
-                                   indicatoron=0)
+                                   width=100, indicatoron=0)
         radbtn_pressure.pack()
         radbtn_co2 = tk.Radiobutton(frame_plot_select, text="CO2",
                                    variable=self.selected_plot, value=3,
                                    command=self.on_plot_source_changed,
-                                   indicatoron=0)
+                                   width=100, indicatoron=0)
         radbtn_co2.pack()
         
         ''' Labels for current values '''     
@@ -142,7 +144,7 @@ class Main():
                                   width=200, height=100)
         frame_lbl_temp.pack()
         label_temp = tk.Label(frame_lbl_temp,
-                              text="Temperature:", justify=tk.LEFT)
+                              text="Temperature (\xb0C):", justify=tk.LEFT)
         label_temp.pack(side=tk.LEFT)
         self.lbl_temp = tk.Label(frame_lbl_temp,
                                  text="0", justify=tk.LEFT)
@@ -162,7 +164,7 @@ class Main():
                                 width=200, height=100)
         frame_lbl_pressure.pack()
         lbl_pressure = tk.Label(frame_lbl_pressure,
-                          text="Pressure:", justify=tk.LEFT)
+                          text="Pressure (bar):", justify=tk.LEFT)
         lbl_pressure.pack(side=tk.LEFT)
         self.lbl_pressure = tk.Label(frame_lbl_pressure,
                                text="0", justify=tk.LEFT)
@@ -172,7 +174,7 @@ class Main():
                                 width=200, height=100)
         frame_lbl_co2.pack()
         lbl_co2 = tk.Label(frame_lbl_co2,
-                          text="CO2:", justify=tk.LEFT)
+                          text="CO2 (%):", justify=tk.LEFT)
         lbl_co2.pack(side=tk.LEFT)
         self.lbl_co2 = tk.Label(frame_lbl_co2,
                                text="0", justify=tk.LEFT)
