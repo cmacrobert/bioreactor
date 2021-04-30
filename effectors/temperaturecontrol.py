@@ -14,8 +14,8 @@ class TemperatureControl(EffectorBase):
     
     def __init__(self):      
         EffectorBase.__init__(self, "TemperatureControl")
-        self.intUpperDomain = 55
-        self.intLowerDomain = 0
+        self.intUpperRange = 55
+        self.intLowerRange = 0
         self.title = "Temperature"
         self.y_axis_label = "Temperature (\xb0C)"
         self.setpoint = 37

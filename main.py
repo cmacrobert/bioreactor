@@ -191,7 +191,7 @@ lines"""
         lowerDomain = effector.lowerDomain
         upperDomain = effector.upperDomain
         
-        self.spbx_setpoint.config(from_=lowerDomain, to=upperDomain)
+        self.spbx_setpoint.config(from_=lowerRange, to=upperRange)
         if(self.should_update_spinbox == True):
             self.spbx_setpoint.delete(0, 'end')
             self.spbx_setpoint.insert(0, setpoint)
@@ -199,10 +199,10 @@ lines"""
         
         self.ax.clear()
         self.ax.plot(effector.get_x(),effector.get_y())
-        self.ax.hlines(setpoint, lowerRange, upperRange, 'C1', 'dashed')
+        self.ax.hlines(setpoint, lowerDomain, upperDomain, 'C1', 'dashed')
         
-        plt.xlim(lowerRange,upperRange)
-        plt.ylim(lowerDomain,upperDomain)
+        plt.xlim(lowerDomain,upperDomain)
+        plt.ylim(lowerRange,upperRange)
         self.ax.set_title(effector.get_title())
         self.ax.set_ylabel(effector.get_y_label())
         self.ax.set_xlabel("Time (s)")

@@ -17,11 +17,11 @@ class PIDControl():
         self.current_value = 0
         self.x = 0
         self.y = 0
-        self.intUpperRange = 50
+        self.intUpperRange = 55
         self.intLowerRange = 0
-        self.intUpperDomain = 55
+        self.intUpperDomain = 50
         self.intLowerDomain = 0
-        self.rangeDiff = self.intUpperRange-self.intLowerRange
+        self.domainDiff = self.intUpperDomain-self.intLowerDomain
 
     def get_setpoint(self):
         return self.setpoint
@@ -66,7 +66,7 @@ class PIDControl():
         self.lowerRange = self.intLowerRange
         self.upperDomain = self.intUpperDomain
         self.lowerDomain = self.intLowerDomain
-        self.rangeDiff = self.upperRange-self.lowerRange
+        self.domainDiff = self.upperDomain-self.lowerDomain
         self.I = 0
         self.Kp = 0.9
         self.Ki = 0.1
@@ -91,11 +91,11 @@ class PIDControl():
         self.t = (self.t+1)   
         self.t_counter = (self.t_counter+1)  
         
-        if self.t_counter >= (self.rangeDiff/self.time_rate):
+        if self.t_counter >= (self.domainDiff/self.time_rate):
             print("t_counter = " + str(self.t_counter))
-            print("rangeDiff=" + str(self.rangeDiff) + ", time rate=" + str(self.time_rate))
-            self.lowerRange = self.upperRange
-            self.upperRange += self.rangeDiff
+            print("domainDiff=" + str(self.domainDiff) + ", time rate=" + str(self.time_rate))
+            self.lowerDomain = self.upperDomain
+            self.upperDomain += self.domainDiff
             self.t_counter = 0
             print("restarting t counter")
                     
