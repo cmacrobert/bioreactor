@@ -230,7 +230,13 @@ Stefan Olsson"""
             effector = self.co2_control 
                     
         if(self.should_update_setpoint == True):
-            effector.set_setpoint(float(self.spbx_setpoint.get()))
+            new_setpoint = float(self.spbx_setpoint.get())
+            if(new_setpoint <= effector.upper_range and
+               new_setpoint >= effector.lower_range):
+                effector.set_setpoint(new_setpoint)
+                self.spbx_setpoint.config(background="White")
+            else:
+                self.spbx_setpoint.config(background="Red")
             self.should_update_setpoint = False
         
         setpoint = effector.get_setpoint()        
