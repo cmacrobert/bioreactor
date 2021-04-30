@@ -11,7 +11,7 @@ import time
 
 class reactor():
      
-    def __init__ (self, temperature=35, ph=7, pressure=1, co2=5): #name was delected, not reffered to
+    def __init__ (self, temperature=15, ph=7, pressure=1, co2=5): #name was delected, not reffered to
         #self.name = name #argument name is passed thorugh init statement)
         self.n = 10
         self.temperature = temperature 
