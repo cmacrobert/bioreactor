@@ -208,11 +208,11 @@ class Main():
         self.shut_down()
         
     def show_about(self):
-        #this looks ugly, but multiline text takes tabs into account
-        message_to_show = """text
-across
-multiple
-lines"""
+        message_to_show = """Credits:
+Calum MacRobert
+Mirrin Gillespie
+Natasha Sutherland
+Stefan Olsson"""
         self.msgbx_about = tk.messagebox.Message(self.m)
         self.msgbx_about.show(title="About", message=message_to_show)
                         
