@@ -68,9 +68,7 @@ class reactor():
 
 
      
-    def get_temperature(self): 
-        print('Reactor - Getting temperature') 
-        return self.temperature 
+ 
     
     def set_peltier_temp(self, temp):
         self.peltier_temp = temp
@@ -115,7 +113,12 @@ class reactor():
             self.T = T
             self.dTdt = dTdt
             self.temperature = T[5]
-    
+            return self.temperature 
+        
+    def get_temperature(self): 
+        print('Reactor - Getting temperature') 
+        self.temperature = self.temperature + self.initial_temperature
+        return self.temperature 
      
     def start(self):
         self.running = True
