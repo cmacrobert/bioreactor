@@ -25,7 +25,6 @@ import adafruit_mcp4725
 
 
 i2c = busio.I2C(board.SCL, board.SDA) # Initialize I2C bus. 
-
 dac = adafruit_mcp4725.MCP4725(i2c) # Initialize MCP4725. # Create a DAC instance.  #Using i2c 
 
 #set the DAC output using: 
@@ -37,16 +36,20 @@ dac.raw_value = 4095  # The raw_value property to directly reads and writes
 #corresponds to a Vout pin voltage between 0-3.3V. A heating range of 35 deg
 #is used here https://www.cuidevices.com/product/resource/cp18-m.pdf 
 
-class microcontoller():
+class microcontroller():
     def __init__ (self):
         EffectorBase.__init__(self, "microcontroller")
-        self.temperature = temperature
-        self.set_peltier_temp = temperature
+        self.temp = 0
+        self.maxtemp = 35
+        # self.temperature = temperature
         
-    def set_peltier_voltage(self, value=0):   
-        (self.set_peltier_temp()/35)*4096 = value
-        dac.write(value)
-        value += 1
-        value %= 4096
+    def set_peltier_temp(self,temperature):
+        self.temp = max(0, min(temperature, self.maxtemp))
+        self.set_peltier_voltage()
         
+    def set_peltier_voltage(self):   
+        value = (self.temp/self.maxtemp)*4096
+        dac.set_voltage(value)
+        time.sleep(2.0)
         
+         
