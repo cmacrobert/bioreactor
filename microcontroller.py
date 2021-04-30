@@ -1,109 +1,52 @@
 # -*- coding: utf-8 -*- 
 """ 
-Created on Thu Apr 22 16:37:34 2021 
+Created on Fri Apr 30 02:05:15 2021 
  
 @author: Nat 
 """ 
  
-#Microcontroller 
-#The real-life microcontroller is where the temperature value is converted  
-#to a voltage using it's C code, which will run the peltier module
+# SPDX-FileCopyrightText: 2018 Tony DiCola for Adafruit Industries 
+# SPDX-License-Identifier: MIT 
+
+ # -*- coding: utf-8 -*- 
+""" 
+Created on Fri Apr 30 02:05:15 2021 
+ 
+@author: Nat 
+""" 
+ 
+#python can be used to control a microcontoller's ouput voltage to a component using DAC.
+#This code is for an Arduino or Raspberry Pi microcontroller using CircuitPython and 
+# the MCP4725 component, which has the circuit python library bundle for the MCP4725
+ 
+import board 
+import busio 
+import adafruit_mcp4725 
 
 
-#The C program has not been written or" flashed" onto a microcontroller at this  
-#stage, so a functional python program canno be written to facilitate this 
-# as it requires back and forth communication with the microcontoller   
-   
- 
-#the peltier module and thermocouple's microcontrollor communication 
-#functions should both come into play when the simulated reactor is not running
- 
-#below is some preliminary work based on communicating with a microcontroller,  
-#which cannot be completed at this time. 
+i2c = busio.I2C(board.SCL, board.SDA) # Initialize I2C bus. 
 
-#MOST OF THIS IS C CODE
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
- 
+dac = adafruit_mcp4725.MCP4725(i2c) # Initialize MCP4725. # Create a DAC instance.  #Using i2c 
 
+#set the DAC output using: 
+dac.raw_value = 4095  # The raw_value property to directly reads and writes 
+# to the 12-bit DAC value.   
 
-#work is based on this tutorial and setup: 
-#https://maker.pro/pic/tutorial/introduction-to-python-serial-ports 
-#          USE COM PORT 4 !!! 
- 
-#pip install PySerial -need to have PySerial to run this.  
- 
-#below configures the PySerial Parametersand imports the serial module 
-#THESE ARE instructions on how to pass commands to the microcontoller 
-#it assumes use of RS-232C protocol
+#takes an incoming peltier temperature value and converts it to the 12 bit DAC 
+#value between # 0 (minimum/ground) to 4095 (maximum/Vout), which 
+#corresponds to a Vout pin voltage between 0-3.3V. A heating range of 35 deg
+#is used here https://www.cuidevices.com/product/resource/cp18-m.pdf 
 
-import serial 
- 
-serialPort = serial.Serial(port = "COM4", baudrate=115200, 
-                           bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE) 
- 
- 
-         
-serialString = ""                           # Used to hold data coming over UART 
- 
- 
-#below this only works if connected to a real microcontroller  
-# while(1): 
- 
-#     # Wait until there is data waiting in the serial buffer 
-#     if(serialPort.in_waiting > 0): 
- 
-#         # Read data out of the buffer until a carraige return / new line is found 
-#         serialString = serialPort.readline() 
- 
-#         # Print the contents of the serial data 
-#         print(serialString.decode('Ascii')) 
- 
-#         # Tell the device connected over the serial port that we recevied the data! 
-#         # The b at the beginning is used to indicate bytes! 
-#         serialPort.write(b"Thank you for sending data \r\n") 
-         
-         
-// CONFIG1 
-#pragma config FOSC = INTOSC pin) 
-#pragma config WDTE = OFF        
-#pragma config PWRTE = OFF       
-#pragma config MCLRE = ON        
-#pragma config CP = OFF         
-#pragma config CPD = OFF         
-#pragma config BOREN = OFF       
-#pragma config CLKOUTEN = OFF    
-#pragma config IESO =  
-#pragma config FCMEN = ON        
- 
-// CONFIG2 
-#pragma config WRT = OFF         
-#pragma config PLLEN = OFF       
-#pragma config STVREN = ON       
-#pragma config BORV = LO        
-#pragma config LVP = ON 
- 
+class microcontoller():
+    def __init__ (self):
+        EffectorBase.__init__(self, "microcontroller")
+        self.temperature = temperature
+        self.set_peltier_temp = temperature
         
-void main(void) 
-{ 
-    // Configure pins as digital 
-    ANSELA = 0; 
-    ANSELC = 0; 
-     
-    OSCCONbits.IRCF = 0b1110; 
- 
-    configUART(); 
-     
-    while(1) 
-    { 
-        sendStringUART("Hello, this is the PIC16F1825"); 
-        readStringUART(stringBuffer);  
-    } 
-} 
- 
- 
+    def set_peltier_voltage(self, value=0):   
+        (self.set_peltier_temp()/35)*4096 = value
+        dac.write(value)
+        value += 1
+        value %= 4096
         
-void configUART(void); 
-void sendByteUART(char data); 
-void sendStringUART(const char *string); 
-void readStringUART(char *buffer); 
- 
+        

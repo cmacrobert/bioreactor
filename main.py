@@ -14,6 +14,7 @@ import reactor
 import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+#import microcontroller
 
 class Main():
     
@@ -29,6 +30,7 @@ class Main():
         self.update_delay = 250
         self.should_update_setpoint = False
         self.should_update_spinbox = False
+        # self.microcontoller = microcontroller()
         
     def shut_down(self):
         """
@@ -228,6 +230,10 @@ lines"""
         self.phsensor.set_sensor_value(self.reactor.get_ph()) 
         #self.ph_control.set_current_value(self.phsensor.get_sensor_value())
         self.reactor.set_ph_input(self.ph_control.get_current_value())
+        
+        #if reactor.running == False
+#   def update_microcontroller(self):
+#       self.microcontroller.set_peltier_temp(self.ph_control.get_current_value())
     
     def main(self):
         '''
