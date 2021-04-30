@@ -12,6 +12,8 @@ import effectors.pressureeffector as PC
 import effectors.CO2effector as CC
 import sensors.thermocouple as TCS
 import sensors.phsensor as PHS
+import sensors.pressuresensor as PS
+import sensors.co2sensor as CS
 import reactor
 import tkinter as tk
 import matplotlib.pyplot as plt
@@ -28,6 +30,8 @@ class Main():
         self.reactor = reactor.reactor()        
         self.thermocouple = TCS.thermocouple()
         self.phsensor = PHS.phsensor()
+        self.pressure_sensor = PS.SensorPressure()
+        self.co2_sensor = CS.SensorCo2()
         self.running = False
         self.shutting_down = False
         self.update_delay = 250
@@ -272,6 +276,14 @@ lines"""
         self.phsensor.set_sensor_value(self.reactor.get_ph()) 
         #self.ph_control.set_current_value(self.phsensor.get_sensor_value())
         self.reactor.set_ph_input(self.ph_control.get_current_value())
+        
+        self.pressure_sensor.set_sensor_value(self.reactor.get_pressure()) 
+        #self.pressure_control.set_current_value(self.pressure_sensor.get_sensor_value())
+        self.reactor.set_pressure_input(self.pressure_control.get_current_value())
+        
+        self.co2_sensor.set_sensor_value(self.reactor.get_co2()) 
+        #self.co2_control.set_current_value(self.co2_sensor.get_sensor_value())
+        self.reactor.set_co2_input(self.co2_control.get_current_value())
     
     def main(self):
         '''
