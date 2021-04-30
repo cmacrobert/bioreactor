@@ -41,7 +41,6 @@ class Main():
     def shut_down(self):
         """
         Stop all running threads before stopping main thread
-        TODO: rename stop() functions? Only ending main loop, not thread
         TODO: display "shutting down, please wait" message (with status?)
         """
         self.m.after_cancel(self.window_update)
@@ -230,6 +229,7 @@ Stefan Olsson"""
             effector = self.co2_control 
                     
         if(self.should_update_setpoint == True):
+            ''' Update setpoint if value is valid '''
             new_setpoint = float(self.spbx_setpoint.get())
             if(new_setpoint <= effector.upper_range and
                new_setpoint >= effector.lower_range):
@@ -247,14 +247,14 @@ Stefan Olsson"""
         
         self.spbx_setpoint.config(from_=lower_range, to=upper_range)
         if(self.should_update_spinbox == True):
+            ''' Update spinbox after switching plot'''
             self.spbx_setpoint.delete(0, 'end')
             self.spbx_setpoint.insert(0, setpoint)
             self.should_update_spinbox = False
         
         self.ax.clear()
         self.ax.plot(effector.get_x(),effector.get_y())
-        self.ax.hlines(setpoint, lower_domain, upper_domain, 'C1', 'dashed')
-        
+        self.ax.hlines(setpoint, lower_domain, upper_domain, 'C1', 'dashed')        
         plt.xlim(lower_domain, upper_domain)
         plt.ylim(lower_range, upper_range)
         self.ax.set_title(effector.get_title())
