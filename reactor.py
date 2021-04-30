@@ -66,10 +66,7 @@ class reactor():
         self.set_co2input = co2
 # ___________________________________________________________________    
 
-        
-        
-    def say(self): 
-        print("Reactor - Temperature is " + str(self.temperature) + " degrees..." ) 
+
      
     def get_temperature(self): 
         print('Reactor - Getting temperature') 
@@ -78,17 +75,6 @@ class reactor():
     def set_peltier_temp(self, temp):
         self.peltier_temp = temp
         
- 
-    # def set_temperature(self, value): 
-    #     print('Reactor - Setting temperature to ' + value) 
-    #     self.temperature = value 
-     
-    
-    def reset_temperature(self): 
-        print('Reactor - Resetting temperature') 
-        self.temperature = self.initialtemperature 
-        self.say()
-     
     
     def reactor_heating_cycle(self):
         n = self.n

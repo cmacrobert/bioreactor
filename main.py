@@ -287,11 +287,11 @@ lines"""
         #self.co2_control.set_current_value(self.co2_sensor.get_sensor_value())
         self.reactor.set_co2_input(self.co2_control.get_current_value())
         
-        #if reactor.running == False
+
 #   def update_microcontroller(self):
+#       if reactor.running == False
 #       self.microcontroller.set_peltier_temp(self.ph_control.get_current_value())
-    
-    #def update microcontoller:
+   
         
         
     def main(self):
