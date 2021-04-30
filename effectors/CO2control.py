@@ -15,10 +15,6 @@ class Co2Control(EffectorBase):  #inherits class
         self.title = "CO2 level"
         self.y_axis_label = "CO2 (%)"
         self.setpoint = 5
-         
-   # def set_target_co2(self, co2):    # receive target CO2 value 
-    #    self.set_setpoint(co2) 
-     
   
     def start(self): 
         print("co2 Sensor: Starting") 

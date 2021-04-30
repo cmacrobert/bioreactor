@@ -38,6 +38,9 @@ class reactor():
         self.set_co2input = co2
         self.initialco2 = co2
         self.C = co2
+            
+    def get_running(self):
+        return self.running
         
         #___________________________________________________________________        
     def get_ph(self): 
