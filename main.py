@@ -18,7 +18,6 @@ import reactor
 import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-#import microcontroller
 
 class Main():
     
@@ -38,12 +37,10 @@ class Main():
         self.update_delay = 250
         self.should_update_setpoint = False
         self.should_update_spinbox = False
-        # self.microcontoller = microcontroller()
         
     def shut_down(self):
         """
         Stop all running threads before stopping main thread
-        TODO: display "shutting down, please wait" message (with status?)
         """
         self.m.after_cancel(self.window_update)
         self.window_update = None
@@ -207,7 +204,6 @@ class Main():
         self.co2_control.reset()
         
     def on_closing(self):
-        #TODO: clear display and replace with "shutting down" message
         self.shut_down()
         
     def show_about(self):
@@ -280,7 +276,7 @@ Stefan Olsson"""
     def update_reactor(self):
         ''' Grabs values from reactor, passes them to places '''
         self.thermocouple.set_sensor_value(self.reactor.get_temperature())
-        self.temperature_control.set_current_value(self.thermocouple.get_sensor_value())
+        #self.temperature_control.set_current_value(self.thermocouple.get_sensor_value())
         self.reactor.set_peltier_temp(self.temperature_control.get_current_value())
 
         self.phsensor.set_sensor_value(self.reactor.get_ph()) 
@@ -294,14 +290,7 @@ Stefan Olsson"""
         self.co2_sensor.set_sensor_value(self.reactor.get_co2()) 
         #self.co2_control.set_current_value(self.co2_sensor.get_sensor_value())
         self.reactor.set_co2_input(self.co2_control.get_current_value())
-        
 
-#   def update_microcontroller(self):
-#       if reactor.running == False
-#       self.microcontroller.set_peltier_temp(self.ph_control.get_current_value())
-   
-        
-        
     def main(self):
         '''
         Main loop starts threads for window and effectors
@@ -321,8 +310,7 @@ Stefan Olsson"""
         self.thread_handler.start_thread("reactor",
                                          self.reactor.start)
         self.thread_handler.start_thread("window",
-                                         self.start_drawing)
-        
+                                         self.start_drawing)        
         
         while (self.running == True):
             time.sleep(1)   # Delay when polling, mainly for debugging

@@ -31,6 +31,7 @@ class reactor():
         self.pressure = pressure
         self.set_pressureinput = pressure
         self.initialpressure = pressure
+        self.pressure_into_reactor = pressure
         self.B = pressure
         
         self.co2 = co2
@@ -40,7 +41,6 @@ class reactor():
         
         #___________________________________________________________________        
     def get_ph(self): 
-        print('Reactor - Getting ph') 
         return self.ph 
         
     
@@ -52,14 +52,12 @@ class reactor():
     #MIRRIN
     
     def get_pressure(self):
-        print('Reactor - Getting pressure')
         return self.pressure
  
     def set_pressure_input(self, pressure):
         self.set_pressureinput = pressure
 #___________________________________________________________________
     def get_co2(self):
-        print('Reactor - Getting co2')
         return self.co2
  
     def set_co2_input(self, co2):
@@ -68,8 +66,7 @@ class reactor():
 
 
      
-    def get_temperature(self): 
-        print('Reactor - Getting temperature') 
+    def get_temperature(self):
         return self.temperature 
     
     def set_peltier_temp(self, temp):
