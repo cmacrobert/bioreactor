@@ -12,6 +12,11 @@ class EffectorPressure(EffectorBase):  #inherits class
     
     def __init__(self):     
         EffectorBase.__init__(self, "Pressure Sensor")
+        self.initial_upper_range = 10
+        self.initial_lower_range = 0
+        self.title = "Pressure"
+        self.y_axis_label = "Pressure (bars)"
+        self.setpoint = 4.5
         
     def set_target_pressure(self, pressure):    # receive target pressure
         self.set_setpoint(pressure)

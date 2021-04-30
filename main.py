@@ -8,6 +8,8 @@ import thread_handler
 import time
 import effectors.temperaturecontrol as TC
 import effectors.phcontrol as PHC
+import effectors.pressureeffector as PC
+import effectors.CO2effector as CC
 import sensors.thermocouple as TCS
 import sensors.phsensor as PHS
 import reactor
@@ -21,6 +23,8 @@ class Main():
         self.thread_handler = thread_handler.ThreadHandler()
         self.temperature_control = TC.TemperatureControl()
         self.ph_control = PHC.PHControl()
+        self.pressure_control = PC.EffectorPressure()
+        self.co2_control = CC.EffectorCo2()
         self.reactor = reactor.reactor()        
         self.thermocouple = TCS.thermocouple()
         self.phsensor = PHS.phsensor()
@@ -40,6 +44,8 @@ class Main():
         self.window_update = None
         self.temperature_control.stop()
         self.ph_control.stop()
+        self.pressure_control.stop()
+        self.co2_control.stop()
         self.reactor.stop()        
         self.thread_handler.stop_threads()
         self.running = False
@@ -112,6 +118,16 @@ class Main():
                                    command=self.on_plot_source_changed,
                                    indicatoron=0)
         radbtn_ph.pack()
+        radbtn_pressure = tk.Radiobutton(frame_plot_select, text="pressure",
+                                   variable=self.selected_plot, value=2,
+                                   command=self.on_plot_source_changed,
+                                   indicatoron=0)
+        radbtn_pressure.pack()
+        radbtn_co2 = tk.Radiobutton(frame_plot_select, text="CO2",
+                                   variable=self.selected_plot, value=3,
+                                   command=self.on_plot_source_changed,
+                                   indicatoron=0)
+        radbtn_co2.pack()
         
         ''' Labels for current values '''     
         frame_curr_vals = tk.Frame(frame_controls,
@@ -137,6 +153,26 @@ class Main():
         self.lbl_ph = tk.Label(frame_lbl_ph,
                                text="0", justify=tk.LEFT)
         self.lbl_ph.pack(side=tk.RIGHT)
+        ''' Label - Pressure '''
+        frame_lbl_pressure = tk.Frame(frame_curr_vals,
+                                width=200, height=100)
+        frame_lbl_pressure.pack()
+        lbl_pressure = tk.Label(frame_lbl_pressure,
+                          text="Pressure:", justify=tk.LEFT)
+        lbl_pressure.pack(side=tk.LEFT)
+        self.lbl_pressure = tk.Label(frame_lbl_pressure,
+                               text="0", justify=tk.LEFT)
+        self.lbl_pressure.pack(side=tk.RIGHT)
+        ''' Label - CO2 '''
+        frame_lbl_co2 = tk.Frame(frame_curr_vals,
+                                width=200, height=100)
+        frame_lbl_co2.pack()
+        lbl_co2 = tk.Label(frame_lbl_co2,
+                          text="CO2:", justify=tk.LEFT)
+        lbl_co2.pack(side=tk.LEFT)
+        self.lbl_co2 = tk.Label(frame_lbl_co2,
+                               text="0", justify=tk.LEFT)
+        self.lbl_co2.pack(side=tk.RIGHT)
     
         ''' Call the gui_update function once, after set time has passed '''
         self.window_update = self.m.after(self.update_delay, 
@@ -160,6 +196,8 @@ class Main():
         ''' When reset uption is selcted, reset effectors '''
         self.temperature_control.reset()
         self.ph_control.reset()
+        self.pressure_control.reset()
+        self.co2_control.reset()
         
     def on_closing(self):
         #TODO: clear display and replace with "shutting down" message
@@ -179,7 +217,11 @@ lines"""
         if self.selected_plot.get() == 0:
             effector = self.temperature_control
         elif self.selected_plot.get() == 1:
-            effector = self.ph_control            
+            effector = self.ph_control      
+        elif self.selected_plot.get() == 2:
+            effector = self.pressure_control 
+        elif self.selected_plot.get() == 3:
+            effector = self.co2_control 
                     
         if(self.should_update_setpoint == True):
             effector.set_setpoint(float(self.spbx_setpoint.get()))
@@ -214,6 +256,8 @@ lines"""
         
         self.lbl_temp.config(text=str(round(self.temperature_control.get_current_value(), 3)))
         self.lbl_ph.config(text=str(round(self.ph_control.get_current_value(), 1)))
+        self.lbl_pressure.config(text=str(round(self.pressure_control.get_current_value(), 1)))
+        self.lbl_co2.config(text=str(round(self.co2_control.get_current_value(), 1)))
         
         ''' Schedule update function again'''
         self.window_update = self.m.after(self.update_delay,
@@ -241,6 +285,10 @@ lines"""
                                          self.temperature_control.start)
         self.thread_handler.start_thread("PHcontroler",
                                          self.ph_control.start)
+        self.thread_handler.start_thread("PressureControler",
+                                         self.pressure_control.start)
+        self.thread_handler.start_thread("CO2 Controler",
+                                         self.co2_control.start)
         self.thread_handler.start_thread("reactor",
                                          self.reactor.start)
         self.thread_handler.start_thread("window",
@@ -256,6 +304,8 @@ lines"""
             ''' Check all other threaded processes have stopped '''
             if (self.temperature_control.get_running() == False and
                 self.ph_control.get_running() == False and
+                self.pressure_control.get_running() == False and
+                self.co2_control.get_running() == False and
                 self.reactor.get_running() == False):            
                 self.shutting_down = False
         print("Main - Shutdown complete")
