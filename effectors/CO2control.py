@@ -6,7 +6,7 @@ Created on Thu Apr 29 13:15:12 2021
 """
 
 from effectors.base import EffectorBase
-class EffectorCo2(EffectorBase):  #inherits class 
+class Co2Control(EffectorBase):  #inherits class 
      
     def __init__(self):      
         EffectorBase.__init__(self, "co2 Sensor") 
@@ -16,8 +16,8 @@ class EffectorCo2(EffectorBase):  #inherits class
         self.y_axis_label = "CO2 (%)"
         self.setpoint = 5
          
-    def set_target_co2(self, co2):    # receive target CO2 value 
-        self.set_setpoint(co2) 
+   # def set_target_co2(self, co2):    # receive target CO2 value 
+    #    self.set_setpoint(co2) 
      
   
     def start(self): 

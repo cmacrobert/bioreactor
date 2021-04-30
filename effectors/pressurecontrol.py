@@ -8,7 +8,7 @@ Created on Wed Apr 28 16:42:12 2021
 from effectors.base import EffectorBase
 
 
-class EffectorPressure(EffectorBase):  #inherits class
+class PressureControl(EffectorBase):  #inherits class
     
     def __init__(self):     
         EffectorBase.__init__(self, "Pressure Sensor")
@@ -18,8 +18,8 @@ class EffectorPressure(EffectorBase):  #inherits class
         self.y_axis_label = "Pressure (bars)"
         self.setpoint = 4.5
         
-    def set_target_pressure(self, pressure):    # receive target pressure
-        self.set_setpoint(pressure)
+    #def set_target_pressure(self, pressure):    # receive target pressure
+     #   self.set_setpoint(pressure)
     
  
     def start(self):

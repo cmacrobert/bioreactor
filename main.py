@@ -8,8 +8,8 @@ import thread_handler
 import time
 import effectors.temperaturecontrol as TC
 import effectors.phcontrol as PHC
-import effectors.pressureeffector as PC
-import effectors.CO2effector as CC
+import effectors.pressurecontrol as PC
+import effectors.CO2control as CC
 import sensors.thermocouple as TCS
 import sensors.phsensor as PHS
 import sensors.pressuresensor as PS
@@ -25,8 +25,8 @@ class Main():
         self.thread_handler = thread_handler.ThreadHandler()
         self.temperature_control = TC.TemperatureControl()
         self.ph_control = PHC.PHControl()
-        self.pressure_control = PC.EffectorPressure()
-        self.co2_control = CC.EffectorCo2()
+        self.pressure_control = PC.PressureControl()
+        self.co2_control = CC.Co2Control()
         self.reactor = reactor.reactor()        
         self.thermocouple = TCS.thermocouple()
         self.phsensor = PHS.phsensor()
