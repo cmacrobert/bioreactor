@@ -21,9 +21,3 @@ class SensorBase(): #establishes class called SensorBase
     def set_sensor_value(self, new_value):  # defines function that allows a new sensor value to be set
         self.sensor_value = new_value;      # allow "new_value" to change the value
         
-    def say_hello(self):                    # defines a new function
-        print("Hello, I am " + self.label); # never used, but can print its name in the console
-        
-    def sayValue(self):
-        print(self.value)
-        
